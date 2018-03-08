@@ -22,16 +22,31 @@ $(document).ready(function () {
 				debugger;
 				var DATA = msg.response.DATA;
 				var fa = DATA.FINANCIAL_ANALYSYS;
-				var PDNote = DATA.PD_NOTE;
+				var pdNote = DATA.PD_NOTE;
 				var RTR = DATA.RTR;
 				var overview = DATA.OVERVIEW || {};
-				if(Object.keys(overview).length == 0){
-					getApplicationData();
-				}else{
+
+				updateFinancialAnalysys(fa);
+
+				if(Object.keys(overview).length != 0){
 					fillOverviewData(overview);
 				}
-				updateFinancialAnalysys(fa);
-				fillPDNote(PDNote, fa);
+				if (Object.keys(pdNote).length != 0) {
+					fillPDNote(pdNote, fa);
+				}
+				if(Object.keys(overview).length == 0 || Object.keys(pdNote).length == 0){
+					getApplicationData(function(appData){
+						if(Object.keys(overview).length == 0){
+							overview = prepareOverviewData(appData);
+							fillOverviewData(overview);
+						}
+						if (Object.keys(pdNote).length == 0) {
+							pdNote = preparePDNoteData(appData);
+							fillPDNote(pdNote, fa);
+						}
+
+					});
+				}
 				fillRTRForm(RTR);
 
 			}
@@ -60,7 +75,7 @@ $(document).ready(function () {
 	// 	debugger;
 	// 	//updateOverview(data);
 	// });
-	function getApplicationData(){
+	function getApplicationData(callBack){
 		debugger;
 		$.ajax({
 			crossDomain: true,
@@ -75,111 +90,8 @@ $(document).ready(function () {
 			url: "https://dev-api.incred.com/application/get/"+document.getElementById('appid').value,
 			success: function (msg) {
 				debugger;
+				callBack(msg);
 				//document.getElementById('loadingImg').style.visibility="hidden";
-				if (msg && msg.application && msg.customer) {
-					debugger; 
-					var application  = msg.application || {};
-					var customer = msg.customer || {};
-					var details = {};
-					var address = [];
-					var promotor = [];
-					
-					Object.values(customer).forEach(function(applicant){
-						var bdDatails = {};
-						var customer = applicant.CUSTOMER || {};
-						bdDatails.CUSTOMER_TYPE = customer.CUSTOMER_TYPE;
-						if(applicant.APPLICANT_TYPE == "Primary"){
-							details.CASE_NAME = customer.COMPANY_NAME;
-							details.CONSTITUTION = customer.COMPANY_CATEGORY.DESC;
-							details.NATURE_OF_BUSINESS = customer.NATURE_OF_BUSINESS.DESC;
-							details.INDUSTRY = customer.INDUSTRY.DESC;
-							details.COMPANY_WEBSITE = customer.COMPANY_WEBSITE;
-
-							var addreses = Object.values(customer.ADDRESS);
-							addreses.forEach(function(item){
-								var adObj = {};
-								if(item.ADDRESS_TYPE == "Office Address"){
-									adObj.ADDRESS_TYPE = item.ADDRESS_TYPE;
-									adObj.OFFICE_OWNERSHIP = item.ACCOMMODATION_TYPE.DESC;
-									adObj.OFFICE_ADDRESS = item.ADDRESS;
-									adObj.FI_REQUIRED = false;
-								}
-								if(item.ADDRESS_TYPE == "Registered Address"){
-									adObj.ADDRESS_TYPE = item.ADDRESS_TYPE;
-									adObj.RESIDENCE_OWNERSHIP = item.ACCOMMODATION_TYPE.DESC;
-									adObj.RESIDENCE_ADDRESS = item.ADDRESS;
-									adObj.FI_REQUIRED = false;
-								}
-								if(item.ADDRESS_TYPE == "Factory Address"){
-									adObj.ADDRESS_TYPE = item.ADDRESS_TYPE;
-									adObj.FACTORY_OWNERSHIP = item.ACCOMMODATION_TYPE.DESC;
-									adObj.FACTORY_ADDRESS = item.ADDRESS;
-									adObj.FI_REQUIRED = false;
-								}
-								address.push(adObj);
-							});
-
-							details.ADDRESS = address;
-						}
-						if(customer.CUSTOMER_TYPE == "COMPANY"){
-							bdDatails.NAME = customer.CONTACT.FNAME+' '+customer.CONTACT.LNAME;
-							bdDatails.RELATIONSHIP = 'Self';
-						}else{
-							bdDatails.NAME = customer.FNAME+' '+customer.LNAME;
-							bdDatails.PERCENTAGE_STAKE_HOLDING = customer.SHARE_HOLDING;
-							bdDatails.RELATION_WITH = customer.RELATION_WITH;
-							bdDatails.RELATIONSHIP = customer.RELATIONSHIP;
-							bdDatails.DOB = customer.DOB;
-							bdDatails.EDUCATIONAL_QUALIFICATIONS = customer.EDUCATIONAL_QUALIFICATIONS;
-							bdDatails.WORKING_SINCE = customer.WORKING_SINCE;
-							bdDatails.WORK_INDUSTRY_EXPERIENCE = customer.WORK_INDUSTRY_EXPERIENCE;
-							bdDatails.CIBIL_SCORE = customer.CIBIL_SCORE; //TODO:check with ranjit and karthikeya
-							bdDatails.LINKEDIN = customer.LINKEDIN; //TODO:check with ranjit and karthikeya
-						}
-						promotor.push(bdDatails);
-					});
-
-					details.PROMOTOR_DETAILS = promotor;
-
-					details.APPLICATION_ID = application.APPLICATION_ID;
-					details.SALES_MANAGER = application.SALES_MANAGER.firstName+' '+application.SALES_MANAGER.lastName;
-					details.PARTNER_TYPE = ''; //TODO:check with Ranjit
-					details.LOCATION = application.BRANCH_LOCATION.DESC; //TODO:check with Ranjit
-					details.DST = ''; //TODO:check with Ranjit
-					details.PARTNER_NAME = application.PARTNER.PARTNER_NAME;
-					details.LOAN_SCHEME = application.LOAN_SCHEME;
-					
-					details.FIRST_TIME_BORROWER_UN_SECURED_LOAN = '';
-					details.AVAILING_OD_CC_LIMIT = '';
-
-					details.GOOGLE_SEARCH  = '';
-					details.WATCHOUT_INVESTOR = '';
-					details.BIFR = '';
-					details.RBI_DEFAULTER_LIST = '';
-
-					details.PROPOSED_LOAN_AMOUNT = application.LOAN_AMOUNT;
-					details.RATE_OF_INTEREST = application.RATE_OF_INTEREST;
-					details.TENURE = application.LOAN_TENURE;
-					details.MONTHLY_EMI = application.MONTHLY_EMI;
-
-					//DEPENDS ON BANKING AND FA DATA
-					details.DSCR = '';
-					details.ABB = '';
-					details.BANKING_THROUGHPUT = '';
-					details.VAT_THROUGHPUT = '';
-					details.LEVERAGE = '';
-					details.BORROWING_TO_TURNOVER_RATIO = '';
-					details.WORKING_CAPITAL_GAP = '';
-					details.TOPLINE_TREND = '';
-					details.BOTTOMLINE_TREND = '';
-					details.OPBDIT_TREND = ''; 
-					details.TNW_TREND = '';
-					details.CHEQUE_BOUNCE_RATIO = '';
-					
-					details.DEVIATIONS=[];
-debugger;
-					fillOverviewData(details);
-				}
 			},
 			complete: function(){
 				$('.ajax-loader').css("visibility", "hidden");
@@ -187,8 +99,140 @@ debugger;
 		});
 		
 	}
-	function fillOverviewData(ovData){
+	function preparePDNoteData(appData){
 		debugger;
+		var details = {};
+		if (appData && appData.application && appData.customer) {
+			var application  = appData.application || {};
+			var customers = appData.customer || {};
+			var promotor = [];
+			customers = Object.values(customers).filter(customer => customer.APPLICANT_TYPE == "Primary");
+			if(customers.length>0){
+				console.log('customer :'+JSON.stringify(customers[0]));
+				var applicant = customers[0].CUSTOMER || {};
+				details.NAME_OF_THE_ENTITY = applicant.COMPANY_NAME;
+				details.CONSTITUTION = applicant.COMPANY_CATEGORY.DESC;
+				details.NATURE_OF_BUSINESS = applicant.NATURE_OF_BUSINESS.DESC;
+				details.INDUSTRY = applicant.INDUSTRY.DESC;
+				details.ADDRESS = applicant.ADDRESS || {};
+			}
+			details.SALES_MANAGER = application.SALES_MANAGER.firstName+' '+application.SALES_MANAGER.lastName;
+			details.DST = application.DST; //TODO:check with Ranjit
+			details.CITY = application.BRANCH_LOCATION.DESC;
+		}
+		return details;
+	}
+	function prepareOverviewData(appData){
+		debugger;
+		var details = {};
+		if (msg && msg.application && msg.customer) {
+			debugger; 
+			var application  = msg.application || {};
+			var customer = msg.customer || {};
+			var address = [];
+			var promotor = [];
+			debugger;
+			Object.values(customer).forEach(function(applicant){
+				var bdDatails = {};
+				var customer = applicant.CUSTOMER || {};
+				bdDatails.APPLICANT_TYPE = applicant.APPLICANT_TYPE;
+				bdDatails.CUSTOMER_TYPE = customer.CUSTOMER_TYPE;
+				if(applicant.APPLICANT_TYPE == "Primary"){
+					details.CASE_NAME = customer.COMPANY_NAME;
+					details.CONSTITUTION = customer.COMPANY_CATEGORY.DESC;
+					details.NATURE_OF_BUSINESS = customer.NATURE_OF_BUSINESS.DESC;
+					details.INDUSTRY = customer.INDUSTRY.DESC;
+					details.COMPANY_WEBSITE = customer.COMPANY_WEBSITE;
+
+					var addreses = Object.values(customer.ADDRESS);
+					addreses.forEach(function(item){
+						var adObj = {};
+						if(item.ADDRESS_TYPE == "Office Address"){
+							adObj.ADDRESS_TYPE = item.ADDRESS_TYPE;
+							adObj.OFFICE_OWNERSHIP = item.ACCOMMODATION_TYPE.DESC;
+							adObj.OFFICE_ADDRESS = item.ADDRESS;
+							adObj.FI_REQUIRED = false;
+						}
+						if(item.ADDRESS_TYPE == "Registered Address"){
+							adObj.ADDRESS_TYPE = item.ADDRESS_TYPE;
+							adObj.RESIDENCE_OWNERSHIP = item.ACCOMMODATION_TYPE.DESC;
+							adObj.RESIDENCE_ADDRESS = item.ADDRESS;
+							adObj.FI_REQUIRED = false;
+						}
+						if(item.ADDRESS_TYPE == "Factory Address"){
+							adObj.ADDRESS_TYPE = item.ADDRESS_TYPE;
+							adObj.FACTORY_OWNERSHIP = item.ACCOMMODATION_TYPE.DESC;
+							adObj.FACTORY_ADDRESS = item.ADDRESS;
+							adObj.FI_REQUIRED = false;
+						}
+						address.push(adObj);
+					});
+
+					details.ADDRESS = address;
+				}
+				if(customer.CUSTOMER_TYPE == "COMPANY"){
+					bdDatails.NAME = customer.COMPANY_NAME;
+					//bdDatails.RELATIONSHIP = 'Self';
+				}else{
+					bdDatails.NAME = customer.FNAME+' '+customer.LNAME;
+					bdDatails.PERCENTAGE_STAKE_HOLDING = customer.SHARE_HOLDING;
+					bdDatails.RELATION_WITH = customer.RELATION_WITH;
+					bdDatails.RELATIONSHIP = customer.RELATIONSHIP;
+					bdDatails.DOB = customer.DOB;
+					bdDatails.EDUCATIONAL_QUALIFICATIONS = customer.EDUCATIONAL_QUALIFICATIONS;
+					bdDatails.WORKING_SINCE = customer.WORKING_SINCE;
+					bdDatails.WORK_INDUSTRY_EXPERIENCE = customer.WORK_INDUSTRY_EXPERIENCE;
+					bdDatails.CIBIL_SCORE = customer.CIBIL_SCORE; //TODO:check with ranjit and karthikeya
+					bdDatails.LINKEDIN = customer.LINKEDIN; //TODO:check with ranjit and karthikeya
+				}
+				promotor.push(bdDatails);
+			});
+
+			details.PROMOTOR_DETAILS = promotor;
+
+			details.APPLICATION_ID = application.APPLICATION_ID;
+			details.SALES_MANAGER = application.SALES_MANAGER.firstName+' '+application.SALES_MANAGER.lastName;
+			details.PARTNER_TYPE = ''; //TODO:check with Ranjit
+			details.LOCATION = application.BRANCH_LOCATION.DESC; //TODO:check with Ranjit
+			details.DST = ''; //TODO:check with Ranjit
+			details.PARTNER_NAME = application.PARTNER.PARTNER_NAME;
+			details.LOAN_SCHEME = application.LOAN_SCHEME;
+			
+			details.FIRST_TIME_BORROWER_UN_SECURED_LOAN = '';
+			details.AVAILING_OD_CC_LIMIT = '';
+
+			details.GOOGLE_SEARCH  = '';
+			details.WATCHOUT_INVESTOR = '';
+			details.BIFR = '';
+			details.RBI_DEFAULTER_LIST = '';
+
+			details.PROPOSED_LOAN_AMOUNT = application.LOAN_AMOUNT;
+			details.RATE_OF_INTEREST = application.RATE_OF_INTEREST;
+			details.TENURE = application.LOAN_TENURE;
+			details.MONTHLY_EMI = application.MONTHLY_EMI;
+
+			//DEPENDS ON BANKING AND FA DATA
+			details.DSCR = '';
+			details.ABB = '';
+			details.BANKING_THROUGHPUT = '';
+			details.VAT_THROUGHPUT = '';
+			details.LEVERAGE = '';
+			details.BORROWING_TO_TURNOVER_RATIO = '';
+			details.WORKING_CAPITAL_GAP = '';
+			details.TOPLINE_TREND = '';
+			details.BOTTOMLINE_TREND = '';
+			details.OPBDIT_TREND = ''; 
+			details.TNW_TREND = '';
+			details.CHEQUE_BOUNCE_RATIO = '';
+			
+			details.DEVIATIONS=[];
+		}
+		return details;
+	}
+	function preparePDNoteData(appData){
+		debugger;
+	}
+	function fillOverviewData(ovData){
 		var ovFields = this.ovFields;
 		var obj = {};
 		ovFields.forEach(function(item,idx){
@@ -199,13 +243,11 @@ debugger;
 					ele.value = ovData[field] || '';
 				}
 				if(field == "ADDRESS"){
-					debugger;
-					var addreses = ovData[field];
+					var addreses = ovData[field] || [];
 					var Re_address = [];
 					var Ow_address = [];
 					var fa_address = [];
 					addreses.forEach(function(addressItem){
-						debugger;
 						if(addressItem.ADDRESS_TYPE == 'Office Address'){
 							Ow_address.push(addressItem);
 						}
@@ -278,7 +320,7 @@ debugger;
 					});
 				}
 				if(field == "PROMOTOR_DETAILS"){
-					debugger;
+					
 					var pDetails = ovData[field];
 					pDetails.forEach(function(bDetails){
 						if(bDetails.CUSTOMER_TYPE == "COMPANY"){
@@ -291,7 +333,7 @@ debugger;
 						return a["index"] - b["index"];
 					});
 					pDetails.forEach(function(bDetails,idx){
-						debugger;
+						
 						idx = idx+1;
 						Object.keys(bDetails).forEach(function(bdkey){
 							    var id = 'ov-'+'bd-'+bdkey+'-'+idx;
@@ -305,7 +347,7 @@ debugger;
 				if(field == "DEVIATIONS"){
 					var deviations = ovData[field];
 					deviations.forEach(function(deviation,idx){
-						debugger;
+						
 						idx = idx+1;
 						Object.keys(deviation).forEach(function(dkey){
 								var id = 'ov-DEVIATIONS_'+dkey+'-'+idx;
@@ -353,7 +395,7 @@ debugger;
 		updateCAMCalculation(dataObj, url);
 	}
 	function updateRTR(data) {
-		debugger;
+		
 		var url = "http://localhost:3004/v2/cam/update/rtr";
 		var dataObj = {
 			"APPLICATION_ID": document.getElementById('appid').value,
@@ -365,7 +407,7 @@ debugger;
 		updateCAMCalculation(dataObj, url);
 	}
 	function updateOverview(data) {
-		debugger;
+		
 		var url = "http://localhost:3004/v2/cam/update/overview";
 		var dataObj = {
 			"APPLICATION_ID": document.getElementById('appid').value,
@@ -377,7 +419,7 @@ debugger;
 		updateCAMCalculation(dataObj, url);
 	}
 	function getOVerviewInfo(){
-		debugger;
+		
 
 		var ovFields = this.ovFields;
 		var obj = {};
@@ -448,9 +490,9 @@ debugger;
 				if(field == "DEVIATIONS"){
 					var keys = item.value;
 					var deviations = [];
-					debugger;
+					
 					keys.forEach(function(deviation,adIdx){
-						debugger;
+						
 						var bObj = {};
 						adIdx = adIdx+1;
 						Object.values(deviation).forEach(function(dkey){
@@ -480,7 +522,7 @@ debugger;
 
 				}
 		});
-		debugger;
+		
 		return obj;
 
 	}
@@ -563,7 +605,7 @@ debugger;
 			data: JSON.stringify(dataObj),
 			url: url,
 			success: function (msg) {
-				debugger;
+			
 				if (msg) {
 					alert(JSON.stringify(msg));
 				}
@@ -656,7 +698,7 @@ debugger;
 					});
 					for (var j = 1; j <= scheduls.length; j++) {
 						var repayItem = scheduls[j - 1];
-						debugger
+						
 						var sId_Key = 'rtr-' + field + '_' + j; //rtr-REPAYMENT_SCHEDULE_1
 						var keyEle = document.getElementById(sId_Key);
 						if (keyEle) {
