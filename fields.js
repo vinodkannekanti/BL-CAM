@@ -76,6 +76,7 @@ var ovFields = [
     { "key": "AVAILING_OD_CC_LIMIT" },
     {
         "key": "PROMOTOR_DETAILS", "value": [{
+
             "key1": "NAME",
             "key2": "RELATION_WITH",
             "key3": "RELATIONSHIP",
@@ -85,7 +86,9 @@ var ovFields = [
             "key7": "WORKING_SINCE",
             "key8": "WORK_INDUSTRY_EXPERIENCE",
             "key9": "CIBIL_SCORE",
-            "key10": "LINKEDIN"
+            "key10": "LINKEDIN",
+            "key11":'APPLICANT_TYPE',
+            "key12":'CUSTOMER_TYPE'
             
         },
         {
@@ -98,7 +101,9 @@ var ovFields = [
             "key7": "WORKING_SINCE",
             "key8": "WORK_INDUSTRY_EXPERIENCE",
             "key9": "CIBIL_SCORE",
-            "key10": "LINKEDIN"
+            "key10": "LINKEDIN",
+            "key11":'APPLICANT_TYPE',
+            "key12":'CUSTOMER_TYPE'
         },
         {
             "key1": "NAME",
@@ -110,7 +115,9 @@ var ovFields = [
             "key7": "WORKING_SINCE",
             "key8": "WORK_INDUSTRY_EXPERIENCE",
             "key9": "CIBIL_SCORE",
-            "key10": "LINKEDIN"
+            "key10": "LINKEDIN",
+            "key11":'APPLICANT_TYPE',
+            "key12":'CUSTOMER_TYPE'
         },
         {
             "key1": "NAME",
@@ -122,7 +129,9 @@ var ovFields = [
             "key7": "WORKING_SINCE",
             "key8": "WORK_INDUSTRY_EXPERIENCE",
             "key9": "CIBIL_SCORE",
-            "key10": "LINKEDIN"
+            "key10": "LINKEDIN",
+            "key11":'APPLICANT_TYPE',
+            "key12":'CUSTOMER_TYPE'
         }]
     },
     { "key": "GOOGLE_SEARCH" },

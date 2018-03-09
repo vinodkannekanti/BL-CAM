@@ -1,5 +1,7 @@
+var CAM_DATA;
 $(document).ready(function () {
 	debugger;
+	//var CAM_DATA ;
 	$('.example1').datepicker({
 		format: "dd/mm/yy",
 		autoclose: true
@@ -14,29 +16,28 @@ $(document).ready(function () {
 			request.setRequestHeader("api-key", "f72f0ffdad341711a9f978f5e9db448fc84733fbcb271ff7302a360debb942");
 		},
 		//url: "http://localhost:3004/v2/cam/get/3285469037151094A",
-		url: "http://localhost:3004/v2/cam/get/"+document.getElementById('appid').value,
+		url: "http://localhost:3004/v2/cam/get/" + document.getElementById('appid').value,
 		success: function (msg) {
-			debugger;
-			//document.getElementById('loadingImg').style.visibility="hidden";
 			if (msg && msg.response) {
-				debugger;
-				var DATA = msg.response.DATA;
-				var fa = DATA.FINANCIAL_ANALYSYS;
-				var pdNote = DATA.PD_NOTE;
-				var RTR = DATA.RTR;
+				CAM_DATA = msg.response.DATA;
+				var DATA = msg.response.DATA || {};
+				var fa = DATA.FINANCIAL_ANALYSYS || {};
+				var pdNote = DATA.PD_NOTE || {};
+				var RTR = DATA.RTR || {};
 				var overview = DATA.OVERVIEW || {};
 
 				updateFinancialAnalysys(fa);
+				fillRTRForm(RTR);
 
-				if(Object.keys(overview).length != 0){
+				if (Object.keys(overview).length != 0) {
 					fillOverviewData(overview);
 				}
 				if (Object.keys(pdNote).length != 0) {
 					fillPDNote(pdNote, fa);
 				}
-				if(Object.keys(overview).length == 0 || Object.keys(pdNote).length == 0){
-					getApplicationData(function(appData){
-						if(Object.keys(overview).length == 0){
+				if (Object.keys(overview).length == 0 || Object.keys(pdNote).length == 0) {
+					getApplicationData(function (appData) {
+						if (Object.keys(overview).length == 0) {
 							overview = prepareOverviewData(appData);
 							fillOverviewData(overview);
 						}
@@ -47,36 +48,32 @@ $(document).ready(function () {
 
 					});
 				}
-				fillRTRForm(RTR);
-
 			}
 		},
-		complete: function(){
+		complete: function () {
 			$('.ajax-loader').css("visibility", "hidden");
 		}
-	 });
-	// $('#pl-btn').click(function (e) {
-	// 	e.preventDefault();
-	// 	//updateFA();
-	// });
-	// $('#pd-btn').click(function (e) {
-	// 	e.preventDefault();
-	// 	//updatePDNote();
-	// });
-	// $('#rtr-btn').click(function (e) {
-	// 	e.preventDefault();
-	// 	var data = getRTRCalculations();
-	// 	var updatedData = updateRTRCalculations(data);
-	// 	//updateRTR(updatedData);
-	// });
-	// $('#ov-btn').click(function (e) {
-	// 	e.preventDefault();
-	// 	var data = getOVerviewInfo();
-	// 	debugger;
-	// 	//updateOverview(data);
-	// });
-	function getApplicationData(callBack){
-		debugger;
+	});
+	$('#pl-btn').click(function (e) {
+		e.preventDefault();
+		updateFA();
+	});
+	$('#pd-btn').click(function (e) {
+		e.preventDefault();
+		updatePDNote();
+	});
+	$('#rtr-btn').click(function (e) {
+		e.preventDefault();
+		var data = getRTRCalculations();
+		var updatedData = updateRTRCalculations(data);
+		updateRTR(updatedData);
+	});
+	$('#ov-btn').click(function (e) {
+		e.preventDefault();
+		var data = getOVerviewInfo();
+		updateOverview(data);
+	});
+	function getApplicationData(callBack) {
 		$.ajax({
 			crossDomain: true,
 			type: "GET",
@@ -87,28 +84,25 @@ $(document).ready(function () {
 				request.setRequestHeader("api-key", "f72f0ffdad341711a9f978f5e9db448fc84733fbcb271ff7302a360debb942");
 			},
 			//url: "http://localhost:3004/v2/cam/get/3285469037151094A",
-			url: "https://dev-api.incred.com/application/get/"+document.getElementById('appid').value,
+			url: "https://dev-api.incred.com/application/get/" + document.getElementById('appid').value,
 			success: function (msg) {
-				debugger;
 				callBack(msg);
-				//document.getElementById('loadingImg').style.visibility="hidden";
 			},
-			complete: function(){
+			complete: function () {
 				$('.ajax-loader').css("visibility", "hidden");
 			}
 		});
-		
+
 	}
-	function preparePDNoteData(appData){
-		debugger;
+	function preparePDNoteData(appData) {
 		var details = {};
 		if (appData && appData.application && appData.customer) {
-			var application  = appData.application || {};
+			var application = appData.application || {};
 			var customers = appData.customer || {};
 			var promotor = [];
 			customers = Object.values(customers).filter(customer => customer.APPLICANT_TYPE == "Primary");
-			if(customers.length>0){
-				console.log('customer :'+JSON.stringify(customers[0]));
+			if (customers.length > 0) {
+				console.log('customer :' + JSON.stringify(customers[0]));
 				var applicant = customers[0].CUSTOMER || {};
 				details.NAME_OF_THE_ENTITY = applicant.COMPANY_NAME;
 				details.CONSTITUTION = applicant.COMPANY_CATEGORY.DESC;
@@ -116,28 +110,25 @@ $(document).ready(function () {
 				details.INDUSTRY = applicant.INDUSTRY.DESC;
 				details.ADDRESS = applicant.ADDRESS || {};
 			}
-			details.SALES_MANAGER = application.SALES_MANAGER.firstName+' '+application.SALES_MANAGER.lastName;
+			details.SALES_MANAGER = application.SALES_MANAGER.firstName + ' ' + application.SALES_MANAGER.lastName;
 			details.DST = application.DST; //TODO:check with Ranjit
 			details.CITY = application.BRANCH_LOCATION.DESC;
 		}
 		return details;
 	}
-	function prepareOverviewData(appData){
-		debugger;
+	function prepareOverviewData(appData) {
 		var details = {};
-		if (msg && msg.application && msg.customer) {
-			debugger; 
-			var application  = msg.application || {};
-			var customer = msg.customer || {};
+		if (appData && appData.application && appData.customer) {
+			var application = appData.application || {};
+			var customer = appData.customer || {};
 			var address = [];
 			var promotor = [];
-			debugger;
-			Object.values(customer).forEach(function(applicant){
+			Object.values(customer).forEach(function (applicant) {
 				var bdDatails = {};
 				var customer = applicant.CUSTOMER || {};
 				bdDatails.APPLICANT_TYPE = applicant.APPLICANT_TYPE;
 				bdDatails.CUSTOMER_TYPE = customer.CUSTOMER_TYPE;
-				if(applicant.APPLICANT_TYPE == "Primary"){
+				if (applicant.APPLICANT_TYPE == "Primary") {
 					details.CASE_NAME = customer.COMPANY_NAME;
 					details.CONSTITUTION = customer.COMPANY_CATEGORY.DESC;
 					details.NATURE_OF_BUSINESS = customer.NATURE_OF_BUSINESS.DESC;
@@ -145,21 +136,21 @@ $(document).ready(function () {
 					details.COMPANY_WEBSITE = customer.COMPANY_WEBSITE;
 
 					var addreses = Object.values(customer.ADDRESS);
-					addreses.forEach(function(item){
+					addreses.forEach(function (item) {
 						var adObj = {};
-						if(item.ADDRESS_TYPE == "Office Address"){
+						if (item.ADDRESS_TYPE == "Office Address") {
 							adObj.ADDRESS_TYPE = item.ADDRESS_TYPE;
 							adObj.OFFICE_OWNERSHIP = item.ACCOMMODATION_TYPE.DESC;
 							adObj.OFFICE_ADDRESS = item.ADDRESS;
 							adObj.FI_REQUIRED = false;
 						}
-						if(item.ADDRESS_TYPE == "Registered Address"){
+						if (item.ADDRESS_TYPE == "Registered Address") {
 							adObj.ADDRESS_TYPE = item.ADDRESS_TYPE;
 							adObj.RESIDENCE_OWNERSHIP = item.ACCOMMODATION_TYPE.DESC;
 							adObj.RESIDENCE_ADDRESS = item.ADDRESS;
 							adObj.FI_REQUIRED = false;
 						}
-						if(item.ADDRESS_TYPE == "Factory Address"){
+						if (item.ADDRESS_TYPE == "Factory Address") {
 							adObj.ADDRESS_TYPE = item.ADDRESS_TYPE;
 							adObj.FACTORY_OWNERSHIP = item.ACCOMMODATION_TYPE.DESC;
 							adObj.FACTORY_ADDRESS = item.ADDRESS;
@@ -170,11 +161,11 @@ $(document).ready(function () {
 
 					details.ADDRESS = address;
 				}
-				if(customer.CUSTOMER_TYPE == "COMPANY"){
+				if (customer.CUSTOMER_TYPE == "COMPANY") {
 					bdDatails.NAME = customer.COMPANY_NAME;
 					//bdDatails.RELATIONSHIP = 'Self';
-				}else{
-					bdDatails.NAME = customer.FNAME+' '+customer.LNAME;
+				} else {
+					bdDatails.NAME = customer.FNAME + ' ' + customer.LNAME;
 					bdDatails.PERCENTAGE_STAKE_HOLDING = customer.SHARE_HOLDING;
 					bdDatails.RELATION_WITH = customer.RELATION_WITH;
 					bdDatails.RELATIONSHIP = customer.RELATIONSHIP;
@@ -191,17 +182,17 @@ $(document).ready(function () {
 			details.PROMOTOR_DETAILS = promotor;
 
 			details.APPLICATION_ID = application.APPLICATION_ID;
-			details.SALES_MANAGER = application.SALES_MANAGER.firstName+' '+application.SALES_MANAGER.lastName;
+			details.SALES_MANAGER = application.SALES_MANAGER.firstName + ' ' + application.SALES_MANAGER.lastName;
 			details.PARTNER_TYPE = ''; //TODO:check with Ranjit
 			details.LOCATION = application.BRANCH_LOCATION.DESC; //TODO:check with Ranjit
 			details.DST = ''; //TODO:check with Ranjit
 			details.PARTNER_NAME = application.PARTNER.PARTNER_NAME;
 			details.LOAN_SCHEME = application.LOAN_SCHEME;
-			
+
 			details.FIRST_TIME_BORROWER_UN_SECURED_LOAN = '';
 			details.AVAILING_OD_CC_LIMIT = '';
 
-			details.GOOGLE_SEARCH  = '';
+			details.GOOGLE_SEARCH = '';
 			details.WATCHOUT_INVESTOR = '';
 			details.BIFR = '';
 			details.RBI_DEFAULTER_LIST = '';
@@ -221,158 +212,299 @@ $(document).ready(function () {
 			details.WORKING_CAPITAL_GAP = '';
 			details.TOPLINE_TREND = '';
 			details.BOTTOMLINE_TREND = '';
-			details.OPBDIT_TREND = ''; 
+			details.OPBDIT_TREND = '';
 			details.TNW_TREND = '';
 			details.CHEQUE_BOUNCE_RATIO = '';
-			
-			details.DEVIATIONS=[];
+
+			details.DEVIATIONS = [];
 		}
 		return details;
 	}
-	function preparePDNoteData(appData){
-		debugger;
-	}
-	function fillOverviewData(ovData){
+	function fillOverviewData(ovData) {
 		var ovFields = this.ovFields;
 		var obj = {};
-		ovFields.forEach(function(item,idx){
+		ovFields.forEach(function (item, idx) {
 			var field = item.key;
-			var id = 'ov-'+ field;
+			var id = 'ov-' + field;
 			var ele = document.getElementById(id);
-				if (ele) {
-					ele.value = ovData[field] || '';
-				}
-				if(field == "ADDRESS"){
-					var addreses = ovData[field] || [];
-					var Re_address = [];
-					var Ow_address = [];
-					var fa_address = [];
-					addreses.forEach(function(addressItem){
-						if(addressItem.ADDRESS_TYPE == 'Office Address'){
-							Ow_address.push(addressItem);
-						}
-						if(addressItem.ADDRESS_TYPE == 'Factory Address'){
-							fa_address.push(addressItem);
-						}
-						if(addressItem.ADDRESS_TYPE == 'Registered Address'){
-							Re_address.push(addressItem);
-						}
-					});
-					Ow_address.forEach(function(item,idx){
-						idx = idx+1;
-						Object.keys(item).forEach(function(key){
-								if (key == "FI_REQUIRED") {
-									var id = 'ov-OFFICE_OWNERSHIP'+'-'+key+'_'+idx;
-									var ele = document.getElementById(id);
-									if(ele){
-										ele.checked = item[key];
-									}
-								}
-								else {
-									var id = 'ov-'+key+'_'+idx;
-									var ele = document.getElementById(id);
-									if(ele){
-										ele.value = item[key] || '';
-									}
-									
-								}
-						});
-					});
-					fa_address.forEach(function(item,idx){
-						idx = idx+1;
-						Object.keys(item).forEach(function(key){
-							if (key == "FI_REQUIRED") {
-								var id = 'ov-FACTORY_OWNERSHIP'+'-'+key+'_'+idx;
-								var ele = document.getElementById(id);
-								if(ele){
-									ele.checked = item[key];
-								}
+			if (ele) {
+				ele.value = ovData[field] || '';
+			}
+			if (field == "ADDRESS") {
+				var addreses = ovData[field] || [];
+				var Re_address = [];
+				var Ow_address = [];
+				var fa_address = [];
+				addreses.forEach(function (addressItem) {
+					if (addressItem.ADDRESS_TYPE == 'Office Address') {
+						Ow_address.push(addressItem);
+					}
+					if (addressItem.ADDRESS_TYPE == 'Factory Address') {
+						fa_address.push(addressItem);
+					}
+					if (addressItem.ADDRESS_TYPE == 'Registered Address') {
+						Re_address.push(addressItem);
+					}
+				});
+				Ow_address.forEach(function (item, idx) {
+					idx = idx + 1;
+					Object.keys(item).forEach(function (key) {
+						if (key == "FI_REQUIRED") {
+							var id = 'ov-OFFICE_OWNERSHIP' + '-' + key + '_' + idx;
+							var ele = document.getElementById(id);
+							if (ele) {
+								ele.checked = item[key];
 							}
-							else {
-								var id = 'ov-'+key+'_'+idx;
-								var ele = document.getElementById(id);
-								if(ele){
-									ele.value = item[key] || '';
-								}
-								
-							}
-						});
-					});
-					Re_address.forEach(function(item,idx){
-						idx = idx+1;
-						Object.keys(item).forEach(function(key){
-							if (key == "FI_REQUIRED") {
-								var id = 'ov-RESIDENCE_OWNERSHIP'+'-'+key+'_'+idx;
-								var ele = document.getElementById(id);
-								if(ele){
-									ele.checked = item[key];
-								}
-							}
-							else {
-								var id = 'ov-'+key+'_'+idx;
-								var ele = document.getElementById(id);
-								if(ele){
-									ele.value = item[key] || '';
-								}
-								
-							}
-						});
-					});
-				}
-				if(field == "PROMOTOR_DETAILS"){
-					
-					var pDetails = ovData[field];
-					pDetails.forEach(function(bDetails){
-						if(bDetails.CUSTOMER_TYPE == "COMPANY"){
-							bDetails.index = 1;
-						}else{
-							bDetails.index = 2;
 						}
-					});
-					pDetails.sort(function (a, b) {
-						return a["index"] - b["index"];
-					});
-					pDetails.forEach(function(bDetails,idx){
-						
-						idx = idx+1;
-						Object.keys(bDetails).forEach(function(bdkey){
-							    var id = 'ov-'+'bd-'+bdkey+'-'+idx;
-								var ele = document.getElementById(id);
-								if (ele) {
-									ele.value = bDetails[bdkey] || '';
-								}
-						});
-					});
-				}
-				if(field == "DEVIATIONS"){
-					var deviations = ovData[field];
-					deviations.forEach(function(deviation,idx){
-						
-						idx = idx+1;
-						Object.keys(deviation).forEach(function(dkey){
-								var id = 'ov-DEVIATIONS_'+dkey+'-'+idx;
-								var ele = document.getElementById(id);
-								if (ele) {
-									ele.value = deviation[dkey] || '';
-								}
-						});
-					});
+						else {
+							var id = 'ov-' + key + '_' + idx;
+							var ele = document.getElementById(id);
+							if (ele) {
+								ele.value = item[key] || '';
+							}
 
-				}
+						}
+					});
+				});
+				fa_address.forEach(function (item, idx) {
+					idx = idx + 1;
+					Object.keys(item).forEach(function (key) {
+						if (key == "FI_REQUIRED") {
+							var id = 'ov-FACTORY_OWNERSHIP' + '-' + key + '_' + idx;
+							var ele = document.getElementById(id);
+							if (ele) {
+								ele.checked = item[key];
+							}
+						}
+						else {
+							var id = 'ov-' + key + '_' + idx;
+							var ele = document.getElementById(id);
+							if (ele) {
+								ele.value = item[key] || '';
+							}
+
+						}
+					});
+				});
+				Re_address.forEach(function (item, idx) {
+					idx = idx + 1;
+					Object.keys(item).forEach(function (key) {
+						if (key == "FI_REQUIRED") {
+							var id = 'ov-RESIDENCE_OWNERSHIP' + '-' + key + '_' + idx;
+							var ele = document.getElementById(id);
+							if (ele) {
+								ele.checked = item[key];
+							}
+						}
+						else {
+							var id = 'ov-' + key + '_' + idx;
+							var ele = document.getElementById(id);
+							if (ele) {
+								ele.value = item[key] || '';
+							}
+
+						}
+					});
+				});
+			}
+			if (field == "PROMOTOR_DETAILS") {
+
+				var pDetails = ovData[field];
+				pDetails.forEach(function (bDetails) {
+					if (bDetails.CUSTOMER_TYPE == "COMPANY" && bDetails.APPLICANT_TYPE == "Primary") {
+						bDetails.index = 1;
+					} else {
+						bDetails.index = 2;
+					}
+				});
+				pDetails.sort(function (a, b) {
+					return a["index"] - b["index"];
+				});
+				pDetails.forEach(function (bDetails, idx) {
+
+					idx = idx + 1;
+					Object.keys(bDetails).forEach(function (bdkey) {
+						var id = 'ov-' + 'bd-' + bdkey + '-' + idx;
+						var ele = document.getElementById(id);
+						if (ele) {
+							ele.value = bDetails[bdkey] || '';
+						}
+					});
+				});
+			}
+			if (field == "DEVIATIONS") {
+				var deviations = ovData[field];
+				deviations.forEach(function (deviation, idx) {
+
+					idx = idx + 1;
+					Object.keys(deviation).forEach(function (dkey) {
+						var id = 'ov-DEVIATIONS_' + dkey + '-' + idx;
+						var ele = document.getElementById(id);
+						if (ele) {
+							ele.value = deviation[dkey] || '';
+						}
+					});
+				});
+
+			}
 		});
 
 	}
-	function updateFA() {
-		var fa = calculateFinancialAnalysys();
-		var url = "http://localhost:3004/v2/cam/update/financialAnalysys";
-		var dataObj = {
-			"APPLICATION_ID": document.getElementById('appid').value,
-			"LOAN_TYPE": "BL",
-			"DATA": {
-				"FINANCIAL_ANALYSYS": fa
+	function compareFields(outputItem, inputItem) {
+		var obj = {};
+		for (var key in outputItem) {
+			if (outputItem.hasOwnProperty(key)) {
+				if (outputItem[key] != inputItem[key]) {
+					if (outputItem.YEAR) {
+						obj.YEAR = outputItem.YEAR;
+					} else if (outputItem.FROM_YEAR && outputItem.TO_YEAR) {
+						obj.FROM_YEAR = outputItem.FROM_YEAR;
+						obj.TO_YEAR = outputItem.TO_YEAR;
+					}
+					obj[key] = { INPUT: inputItem[key], OUTPUT: outputItem[key] };
+				}
 			}
-		};
-		updateCAMCalculation(dataObj, url);
+		}
+		return obj;
+	}
+	function getUnmatchedCalculations(input, output) {
+		var dataArr = [];
+		output.forEach(function (outputItem) {
+			input.forEach(function (inputItem) {
+				var fields = {};
+				if (outputItem.YEAR && inputItem.YEAR && outputItem.YEAR == inputItem.YEAR) {
+					fields = compareFields(outputItem, inputItem);
+				}
+				else if (outputItem.FROM_YEAR && inputItem.FROM_YEAR && outputItem.TO_YEAR && inputItem.TO_YEAR &&
+					outputItem.FROM_YEAR == inputItem.FROM_YEAR && outputItem.TO_YEAR == inputItem.TO_YEAR) {
+					fields = compareFields(outputItem, inputItem);
+				}
+				if (Object.keys(fields).length > 0) {
+					dataArr.push(fields);
+				}
+			});
+		});
+		return dataArr;
+	}
+	function updateFA() {
+
+		var errObj = {};
+		var fa = calculateFinancialAnalysys();
+		debugger;
+		var camData = CAM_DATA || {};
+		var faReqData = camData.FINANCIAL_ANALYSYS;
+		//PROFIT & LOS 
+		var plInput = faReqData.PROFIT_LOSS_ACCOUNT;
+		var plOutput = fa.PROFIT_LOSS_ACCOUNT;
+		var plInputYear = plInput.FINANCIAL_YEAR_ANALYSIS;
+		var plOutputYear = plOutput.FINANCIAL_YEAR_ANALYSIS;
+		var plInputYoy = plInput.FINANCIAL_YEAR_ANALYSIS_YOY;
+		var plOutputYoy = plOutput.FINANCIAL_YEAR_ANALYSIS_YOY;
+		var faObj = {};
+		var errors;
+		errors = getUnmatchedCalculations(plInputYear, plOutputYear);
+		if (errors.length > 0) {
+			faObj.FINANCIAL_YEAR_ANALYSIS = errors;
+		}
+		errors = getUnmatchedCalculations(plInputYoy, plOutputYoy);
+		if (errors.length > 0) {
+			faObj.FINANCIAL_YEAR_ANALYSIS_YOY = errors;
+		}
+		if (Object.keys(faObj).length > 0) {
+			errObj.FINANCIAL_ANALYSYS = faObj;
+		}
+		//BALANCE SHEET
+		var bsInput = faReqData.BALANCE_SHEET;
+		var bsOutput = fa.BALANCE_SHEET;
+		var bsInputYear = bsInput.FINANCIAL_YEAR_ANALYSIS;
+		var bsOutputYear = bsOutput.FINANCIAL_YEAR_ANALYSIS;
+		var bsInputYoy = bsInput.FINANCIAL_YEAR_ANALYSIS_YOY;
+		var bsOutputYoy = bsOutput.FINANCIAL_YEAR_ANALYSIS_YOY;
+		var bsObj = {};
+		errors = getUnmatchedCalculations(bsInputYear, bsOutputYear);
+		if (errors.length > 0) {
+			bsObj.FINANCIAL_YEAR_ANALYSIS = errors;
+		}
+		errors = getUnmatchedCalculations(bsInputYoy, bsOutputYoy);
+		if (errors.length > 0) {
+			bsObj.FINANCIAL_YEAR_ANALYSIS_YOY = errors;
+		}
+		if (Object.keys(bsObj).length > 0) {
+			errObj.BALANCE_SHEET = bsObj;
+		}
+		//RATIOS
+		var ratiosInput = faReqData.RATIOS;
+		var ratiosOutput = fa.RATIOS;
+		errors = getUnmatchedCalculations(ratiosInput, ratiosOutput);
+		if (errors.length > 0) {
+			errObj.RATIOS = errors;
+		}
+		//CASH POSITION
+		var cpInput = faReqData.CASH_POSITION;
+		var cpOutput = fa.CASH_POSITION;
+		debugger;
+		errors = getUnmatchedCalculations(cpInput, cpOutput);
+		if (errors.length > 0) {
+			errObj.CASH_POSITION = errors;
+		}
+		//DSCR CALCULATION
+		var dscrInput = faReqData.DSCR_CALCULATION || {};
+		var dscrOutput = fa.DSCR_CALCULATION || {};
+		var caInput = dscrInput.CASH_ACCRUALS || {};
+		var caOutput = dscrOutput.CASH_ACCRUALS || {};
+		var caComputationInput = caInput.COMPUTATION || {};
+		var caComputationOutput = caOutput.COMPUTATION || {};
+		var caYearlyInput = caInput.YEARLY || {};
+		var caYearlyOutput = caOutput.YEARLY || {};
+		var dscr = {};
+		dscr.CASH_ACCRUALS = {};
+		dscr.OBLIGATIONS = {};
+		var obj = {};
+		obj = compareFields(caComputationOutput, caComputationInput);
+		if (Object.keys(obj).length > 0) {
+			dscr.CASH_ACCRUALS.COMPUTATION = obj;
+		}
+		obj = compareFields(caYearlyOutput, caYearlyInput);
+		if (Object.keys(obj).length > 0) {
+			dscr.CASH_ACCRUALS.YEARLY = obj;
+		}
+		var obInput = dscrInput.OBLIGATIONS || {};
+		var obOutput = dscrOutput.OBLIGATIONS || {};
+		var obComputationInput = obInput.COMPUTATION || {};
+		var obComputationOutput = obOutput.COMPUTATION || {};
+		var obYearlyInput = obInput.YEARLY || {};
+		var obYearlyOutput = obOutput.YEARLY || {};
+		obj = compareFields(obComputationOutput, obComputationInput);
+		if (Object.keys(obj).length > 0) {
+			dscr.OBLIGATIONS.COMPUTATION = obj;
+		}
+		obj = compareFields(obYearlyOutput, obYearlyInput);
+		if (Object.keys(obj).length > 0) {
+			dscr.OBLIGATIONS.YEARLY = obj;
+		}
+		if(dscrInput.DSCR_TOTAL != dscrOutput.DSCR_TOTAL){
+			dscr.DSCR_TOTAL = { INPUT: dscrInput.DSCR_TOTAL, OUTPUT: dscrOutput.DSCR_TOTAL };
+		}
+		if (dscr.DSCR_TOTAL || Object.keys(dscr.CASH_ACCRUALS).length > 0 || Object.keys(dscr.OBLIGATIONS).length > 0) {
+			errObj.DSCR_CALCULATION = dscr;
+		}
+		debugger;
+		if (Object.keys(errObj).length > 0) {
+			var message = { "message": "some calculations are incorrect", "Data": errObj };
+			console.log(JSON.stringify(message));
+			alert(JSON.stringify(message));
+		}else{
+			debugger;
+			var url = "http://localhost:3004/v2/cam/update/financialAnalysys";
+			var dataObj = {
+				"APPLICATION_ID": document.getElementById('appid').value,
+				"LOAN_TYPE": "BL",
+				"DATA": {
+					"FINANCIAL_ANALYSYS": fa
+				}
+			};
+			updateCAMCalculation(dataObj, url);
+		}
 	}
 	function updatePDNote() {
 		var pdNote = {};
@@ -395,7 +527,7 @@ $(document).ready(function () {
 		updateCAMCalculation(dataObj, url);
 	}
 	function updateRTR(data) {
-		
+
 		var url = "http://localhost:3004/v2/cam/update/rtr";
 		var dataObj = {
 			"APPLICATION_ID": document.getElementById('appid').value,
@@ -407,7 +539,7 @@ $(document).ready(function () {
 		updateCAMCalculation(dataObj, url);
 	}
 	function updateOverview(data) {
-		
+
 		var url = "http://localhost:3004/v2/cam/update/overview";
 		var dataObj = {
 			"APPLICATION_ID": document.getElementById('appid').value,
@@ -418,111 +550,111 @@ $(document).ready(function () {
 		};
 		updateCAMCalculation(dataObj, url);
 	}
-	function getOVerviewInfo(){
-		
+	function getOVerviewInfo() {
+
 
 		var ovFields = this.ovFields;
 		var obj = {};
-		ovFields.forEach(function(item,idx){
+		ovFields.forEach(function (item, idx) {
 			var field = item.key;
-			var id = 'ov-'+ field;
+			var id = 'ov-' + field;
 			var ele = document.getElementById(id);
-				if (ele && ele.value) {
-					obj[field] = ele.value;
-				}
-				if(field == "ADDRESS"){
-					
-					var keys = item.value;
-					var address = [];
-					keys.forEach(function(addressItem){
-						
-						var adObj = {};
-						adObj.ADDRESS_TYPE = addressItem.ADDRESS_TYPE;
-						var adField1 = addressItem.key1;
-						var id1 = 'ov-'+adField1+'_1';
-						var ele1 = document.getElementById(id1);
-							if (ele1 && ele1.value) {
-								adObj[adField1] = ele1.value;
-							}
-							var adField2 = addressItem.key2;
-							var id2 = 'ov-'+adField2+'_1';
-							var ele2 = document.getElementById(id2);
-								if (ele2 && ele2.value) {
-									adObj[adField2] = ele2.value;
-								}
-							var adField3 = addressItem.key3;
-							var id3 = 'ov-'+adField1+'-'+adField3+'_1';
-							var ele3 = document.getElementById(id3);
-								if (ele3) {
-									adObj[adField3] = ele3.checked;
-								}
-							address.push(adObj);		
+			if (ele && ele.value) {
+				obj[field] = ele.value;
+			}
+			if (field == "ADDRESS") {
 
-					});
-					obj[field] = address;
-				}
-				if(field == "PROMOTOR_DETAILS"){
-					
-					var keys = item.value;
-					var pmDetails = [];
-					
-					keys.forEach(function(bDetails,adIdx){
-						
-						var bObj = {};
-						adIdx = adIdx+1;
-						if(adIdx == 1){
-							bObj['CUSTOMER_TYPE'] = 'COMPANY';
-						}else{
-							bObj['CUSTOMER_TYPE'] = 'INDIVIDUAL';
+				var keys = item.value;
+				var address = [];
+				keys.forEach(function (addressItem) {
+
+					var adObj = {};
+					adObj.ADDRESS_TYPE = addressItem.ADDRESS_TYPE;
+					var adField1 = addressItem.key1;
+					var id1 = 'ov-' + adField1 + '_1';
+					var ele1 = document.getElementById(id1);
+					if (ele1 && ele1.value) {
+						adObj[adField1] = ele1.value;
+					}
+					var adField2 = addressItem.key2;
+					var id2 = 'ov-' + adField2 + '_1';
+					var ele2 = document.getElementById(id2);
+					if (ele2 && ele2.value) {
+						adObj[adField2] = ele2.value;
+					}
+					var adField3 = addressItem.key3;
+					var id3 = 'ov-' + adField1 + '-' + adField3 + '_1';
+					var ele3 = document.getElementById(id3);
+					if (ele3) {
+						adObj[adField3] = ele3.checked;
+					}
+					address.push(adObj);
+
+				});
+				obj[field] = address;
+			}
+			if (field == "PROMOTOR_DETAILS") {
+
+				var keys = item.value;
+				var pmDetails = [];
+
+				keys.forEach(function (bDetails, adIdx) {
+
+					var bObj = {};
+					adIdx = adIdx + 1;
+					if (adIdx == 1) {
+						bObj['CUSTOMER_TYPE'] = 'COMPANY';
+					} else {
+						bObj['CUSTOMER_TYPE'] = 'INDIVIDUAL';
+					}
+					Object.values(bDetails).forEach(function (bdkey) {
+
+						var id = 'ov-' + 'bd-' + bdkey + '-' + adIdx;
+						var ele4 = document.getElementById(id);
+						if (ele4 && ele4.value) {
+							bObj[bdkey] = ele4.value;
 						}
-						Object.values(bDetails).forEach(function(bdkey){
-								
-							    var id = 'ov-'+'bd-'+bdkey+'-'+adIdx;
-								var ele4 = document.getElementById(id);
-								if (ele4 && ele4.value) {
-									bObj[bdkey] = ele4.value;
-								}
-						});
-						pmDetails.push(bObj);
 					});
-					obj[field] = pmDetails;
-				}
-				if(field == "DEVIATIONS"){
-					var keys = item.value;
-					var deviations = [];
-					
-					keys.forEach(function(deviation,adIdx){
-						
-						var bObj = {};
-						adIdx = adIdx+1;
-						Object.values(deviation).forEach(function(dkey){
-								var id = 'ov-DEVIATIONS_'+dkey+'-'+adIdx;
-								var ele5 = document.getElementById(id);
-								if (ele5 && ele5.value) {
-									bObj[dkey] = ele5.value;
-								}
-						});
-						deviations.push(bObj);
-					});
-					obj[field] = deviations;
-					
-					//Delete BANKING AND FA fields
-					delete obj.DSCR;
-					delete obj.ABB;
-					delete obj.BANKING_THROUGHPUT;
-					delete obj.VAT_THROUGHPUT;
-					delete obj.LEVERAGE;
-					delete obj.BORROWING_TO_TURNOVER_RATIO;
-					delete obj.WORKING_CAPITAL_GAP;
-					delete obj.TOPLINE_TREND;
-					delete obj.BOTTOMLINE_TREND;
-					delete obj.OPBDIT_TREND;
-					delete obj.TNW_TREND;
-					delete obj.CHEQUE_BOUNCE_RATIO;
+					pmDetails.push(bObj);
+				});
+				obj[field] = pmDetails;
+			}
+			if (field == "DEVIATIONS") {
+				var keys = item.value;
+				var deviations = [];
 
-				}
+				keys.forEach(function (deviation, adIdx) {
+
+					var bObj = {};
+					adIdx = adIdx + 1;
+					Object.values(deviation).forEach(function (dkey) {
+						var id = 'ov-DEVIATIONS_' + dkey + '-' + adIdx;
+						var ele5 = document.getElementById(id);
+						if (ele5 && ele5.value) {
+							bObj[dkey] = ele5.value;
+						}
+					});
+					deviations.push(bObj);
+				});
+				obj[field] = deviations;
+
+				//Delete BANKING AND FA fields
+				delete obj.DSCR;
+				delete obj.ABB;
+				delete obj.BANKING_THROUGHPUT;
+				delete obj.VAT_THROUGHPUT;
+				delete obj.LEVERAGE;
+				delete obj.BORROWING_TO_TURNOVER_RATIO;
+				delete obj.WORKING_CAPITAL_GAP;
+				delete obj.TOPLINE_TREND;
+				delete obj.BOTTOMLINE_TREND;
+				delete obj.OPBDIT_TREND;
+				delete obj.TNW_TREND;
+				delete obj.CHEQUE_BOUNCE_RATIO;
+
+			}
 		});
-		
+
 		return obj;
 
 	}
@@ -605,7 +737,7 @@ $(document).ready(function () {
 			data: JSON.stringify(dataObj),
 			url: url,
 			success: function (msg) {
-			
+
 				if (msg) {
 					alert(JSON.stringify(msg));
 				}
@@ -622,9 +754,9 @@ $(document).ready(function () {
 		updateFAFieldsOfPDNote(fa);
 	});
 	$("input[type=number][name=rtr]").bind('keyup change', function () {
-		  var data = getRTRCalculations();
-		  var updatedData = updateRTRCalculations(data);
-		  fillRTRForm(updatedData);
+		var data = getRTRCalculations();
+		var updatedData = updateRTRCalculations(data);
+		fillRTRForm(updatedData);
 	});
 	$("input[type=text][name=rtr]").bind('keyup change', function () {
 		var data = getRTRCalculations();
@@ -673,7 +805,7 @@ $(document).ready(function () {
 	}
 	function fillRTRForm(rtrData) {
 
-		if(!rtrData){
+		if (!rtrData) {
 			return;
 		}
 		var loanData = rtrData.LOAN_DATA;
@@ -698,7 +830,7 @@ $(document).ready(function () {
 					});
 					for (var j = 1; j <= scheduls.length; j++) {
 						var repayItem = scheduls[j - 1];
-						
+
 						var sId_Key = 'rtr-' + field + '_' + j; //rtr-REPAYMENT_SCHEDULE_1
 						var keyEle = document.getElementById(sId_Key);
 						if (keyEle) {
@@ -974,7 +1106,7 @@ $(document).ready(function () {
 				if (key1 != "DATE" && key1 != "MONTH" && key1 != "MONTH_NAME" && key1 != 'YEAR' && key1 != "IS_AUDITED") {
 					Object.keys(toYear).forEach(function (key2) {
 						if (key1 == key2 && fromYear[key1] && toYear[key2]) {
-							var value = getPercentageChange(fromYear[key1], toYear[key2]);
+							var value = getPercentageChange(fromYear[key1], toYear[key2]);	
 							changeYoy[key1] = value;
 						}
 					})
@@ -1107,7 +1239,7 @@ $(document).ready(function () {
 			var positionYear = {};
 			positionYear.YEAR = item.YEAR;
 			positionYear.NET_PROFIT_AFTER_TAX = item.PAT;
-			positionYear.ADD = 0;
+			positionYear.ADD = item.ADD;//TODO:check with Ranjit
 			positionYear.DEPRECIATION = item.DEPRECIATION_AND_AMORTISATION;
 			positionYear.SALARY_PAID_TO_PROMOTER_OR_PARTNERS = item.SALARY_TO_PARTNER_OR_DIRECTOR;
 			positionYear.INTEREST_PAID_TO_PROMOTERS = item.INTEREST_EXPENSES_PAID_TO_PARTNERS_OR_DIRECTOR;
