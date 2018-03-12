@@ -33,9 +33,486 @@
             </span>
         </div>
         <div style="clear:both;"></div>
-        <h2 class="heading">Financial Analysis :</h2>
         <div>
           <div class="left-cls">
+                <h2 class="heading">RTR :</h2>
+                <table id="rtr" class="rtr">
+                    <tr>
+                      <th></th>
+                      <th>Loan 1</th>
+                      <th>Loan 2</th>
+                      <th>Loan 3</th>
+                      <th>Loan 4</th>
+                      <th>Loan 5</th>
+                      <th>Total</th>
+                    </tr>
+                    <tr>
+                      <th>Lender Name  </th>
+                      <th><input type="text" value="Capital First"         id="rtr-loan-1-LENDER_NAME"></th>
+                      <th><input type="text" value="Aditya Birla Fin."     id="rtr-loan-2-LENDER_NAME"></th>
+                      <th><input type="text" value="Edelweiss Retail Fine" id="rtr-loan-3-LENDER_NAME"></th>
+                      <th><input type="text" value="HDFC"                  id="rtr-loan-4-LENDER_NAME"></th>
+                      <th><input type="text" value="ICIC Bank"             id="rtr-loan-5-LENDER_NAME"></th>
+                    </tr>
+                    <tr>
+                      <th>Product  </th>
+                      <th><input type="text" value="B/L"  id="rtr-loan-1-PRODUCT"></th>
+                      <th><input type="text" value="B/L"  id="rtr-loan-2-PRODUCT"></th>
+                      <th><input type="text" value="B/L"  id="rtr-loan-3-PRODUCT"></th>
+                      <th><input type="text" value="B/L"  id="rtr-loan-4-PRODUCT"></th>
+                      <th><input type="text" value="B/L"  id="rtr-loan-5-PRODUCT"></th>
+                    </tr>
+                    <tr>
+                        <th>Initial Loan Amt (In lacs)  </th>
+                        <th><input type="number" name='rtr' value="75.00"  id="rtr-loan-1-INITIAL_LOAN_AMT"></th>
+                        <th><input type="number" name='rtr' value="30.00"  id="rtr-loan-2-INITIAL_LOAN_AMT"></th>
+                        <th><input type="number" name='rtr' value="40.00"  id="rtr-loan-3-INITIAL_LOAN_AMT"></th>
+                        <th><input type="number" name='rtr' value="50.00"  id="rtr-loan-4-INITIAL_LOAN_AMT"></th>
+                        <th><input type="number" name='rtr' value="34.50"  id="rtr-loan-5-INITIAL_LOAN_AMT"></th>
+                        <th><input type="number" name='rtr' id="rtr-TOTAL_INITIAL_LOAN_AMOUNT"></th>
+                    </tr>
+                    <tr>
+                        <th>Current Outstanding (In Lacs)  </th>
+                        <th><input type="number" name='rtr' value="63.47"  id="rtr-loan-1-CURRENT_OUTSTANDING"></th>
+                        <th><input type="number" name='rtr' value="24.68"  id="rtr-loan-2-CURRENT_OUTSTANDING"></th>
+                        <th><input type="number" name='rtr' value="39.16"  id="rtr-loan-3-CURRENT_OUTSTANDING"></th>
+                        <th><input type="number" name='rtr' value="46.67"  id="rtr-loan-4-CURRENT_OUTSTANDING"></th>
+                        <th><input type="number" name='rtr' value="32.04"  id="rtr-loan-5-CURRENT_OUTSTANDING"></th>
+                        <th><input type="number" name='rtr' id="rtr-TOTAL_CURRENT_OUTSTANDING"></th>
+                    </tr>
+                    <tr>
+                        <th>Start Date  </th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="05/10/16" id="rtr-loan-1-START_DATE"></th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="05/05/16" id="rtr-loan-2-START_DATE"></th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="05/01/17" id="rtr-loan-3-START_DATE"></th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="04/01/17" id="rtr-loan-4-START_DATE"></th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="05/10/16" id="rtr-loan-5-START_DATE"></th>
+                    </tr>
+                    <tr>
+                        <th>End Date  </th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="05/09/19" id="rtr-loan-1-END_DATE"></th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="05/04/16" id="rtr-loan-2-END_DATE"></th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="05/12/19" id="rtr-loan-3-END_DATE"></th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="05/09/19" id="rtr-loan-4-END_DATE"></th>
+                        <th><input type="text"  class='example1'  readonly name='rtr' value="05/09/19" id="rtr-loan-5-END_DATE"></th>
+                    </tr>
+                    <tr>
+                        <th>Vintage (MOB)  </th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-1-VINTAGE"></th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-2-VINTAGE"></th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-3-VINTAGE"></th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-4-VINTAGE"></th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-5-VINTAGE"></th>
+                    </tr>
+                    <tr>
+                        <th>Bal Tenor (Months)  </th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-1-BALANCE_TENURE"></th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-2-BALANCE_TENURE"></th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-3-BALANCE_TENURE"></th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-4-BALANCE_TENURE"></th>
+                        <th><input type="number" name='rtr' readonly id="rtr-loan-5-BALANCE_TENURE"></th>
+                    </tr>
+                    <tr>
+                        <th>EMI Obligated? </th>
+                        <th><input type="text" readonly id="rtr-loan-1-IS_EMI_OBLIGATED"></th>
+                        <th><input type="text" readonly id="rtr-loan-2-IS_EMI_OBLIGATED"></th>
+                        <th><input type="text" readonly id="rtr-loan-3-IS_EMI_OBLIGATED"></th>
+                        <th><input type="text" readonly id="rtr-loan-4-IS_EMI_OBLIGATED"></th>
+                        <th><input type="text" readonly id="rtr-loan-5-IS_EMI_OBLIGATED"></th>
+                    </tr>
+                    <tr>
+                        <th>Do you want to overwrite ? </th>
+                        <th><input type="checkbox"  id="rtr-loan-1-OVERWRITE_EMI_OBLIGATED"></th>
+                        <th><input type="checkbox"  id="rtr-loan-2-OVERWRITE_EMI_OBLIGATED"></th>
+                        <th><input type="checkbox"  id="rtr-loan-3-OVERWRITE_EMI_OBLIGATED"></th>
+                        <th><input type="checkbox"  id="rtr-loan-4-OVERWRITE_EMI_OBLIGATED"></th>
+                        <th><input type="checkbox"  id="rtr-loan-5-OVERWRITE_EMI_OBLIGATED"></th>
+                    </tr>
+                    <tr>
+                        <th>EMI </th>
+                        <th><input type="number"  name='rtr' value="273406" id="rtr-loan-1-EMI"></th>
+                        <th><input type="number"  name='rtr' value="109212" id="rtr-loan-2-EMI"></th>
+                        <th><input type="number"  name='rtr' value="145615" id="rtr-loan-3-EMI"></th>
+                        <th><input type="number"  name='rtr' value="175169" id="rtr-loan-4-EMI"></th>
+                        <th><input type="number"  name='rtr' value="120422" id="rtr-loan-5-EMI"></th>
+                        <th><input type="number"  name='rtr' id="rtr-TOTAL_EMI"></th>
+                    </tr>
+                    <tr>
+                        <th>No of Bounces </th>
+                        <th><input type="text"  id="rtr-loan-1-NUMBER_OF_BOUNCES"></th>
+                        <th><input type="text"  id="rtr-loan-2-NUMBER_OF_BOUNCES"></th>
+                        <th><input type="text"  id="rtr-loan-3-NUMBER_OF_BOUNCES"></th>
+                        <th><input type="text"  id="rtr-loan-4-NUMBER_OF_BOUNCES"></th>
+                        <th><input type="text"  id="rtr-loan-5-NUMBER_OF_BOUNCES"></th>
+                    </tr>
+                    <tr><th>Repayment Schedule </th></tr>
+                    <tr>
+                        <th><input type="text"  class='example1'   value="01/11/16" id="rtr-REPAYMENT_SCHEDULE_1"> </th>
+                        <th><input type="text"  class='example1'   value="05/11/16" id="rtr-loan-1-REPAYMENT_SCHEDULE_1"></th>
+                        <th><input type="text"  class='example1'   value="05/11/16" id="rtr-loan-2-REPAYMENT_SCHEDULE_1"></th>
+                        <th><input type="text"  class='example1'   value="NA" id="rtr-loan-3-REPAYMENT_SCHEDULE_1"></th>
+                        <th><input type="text"  class='example1'   id="rtr-loan-4-REPAYMENT_SCHEDULE_1"></th>
+                        <th><input type="text"  class='example1'   id="rtr-loan-5-REPAYMENT_SCHEDULE_1"></th>
+                    </tr>
+                    <tr>
+                        <th><input type="text"  class='example1'   value="01/12/16" id="rtr-REPAYMENT_SCHEDULE_2"> </th>
+                        <th><input type="text"  class='example1'   value="05/12/16" id="rtr-loan-1-REPAYMENT_SCHEDULE_2"></th>
+                        <th><input type="text"  class='example1'   value="05/12/16" id="rtr-loan-2-REPAYMENT_SCHEDULE_2"></th>
+                        <th><input type="text"  class='example1'   value="NOT FOUND" id="rtr-loan-3-REPAYMENT_SCHEDULE_2"></th>
+                        <th><input type="text"  class='example1'   id="rtr-loan-4-REPAYMENT_SCHEDULE_2"></th>
+                        <th><input type="text"  class='example1'   id="rtr-loan-5-REPAYMENT_SCHEDULE_2"></th>
+                    </tr>
+                    <tr>
+                        <th><input type="text"  class='example1'   value="01/01/17" id="rtr-REPAYMENT_SCHEDULE_3"> </th>
+                        <th><input type="text"  class='example1'   value="05/01/17" id="rtr-loan-1-REPAYMENT_SCHEDULE_3"></th>
+                        <th><input type="text"  class='example1'   value="05/01/17" id="rtr-loan-2-REPAYMENT_SCHEDULE_3"></th>
+                        <th><input type="text"  class='example1'   value="05/01/17" id="rtr-loan-3-REPAYMENT_SCHEDULE_3"></th>
+                        <th><input type="text"  class='example1'   id="rtr-loan-4-REPAYMENT_SCHEDULE_3"></th>
+                        <th><input type="text"  class='example1'   id="rtr-loan-5-REPAYMENT_SCHEDULE_3"></th>
+                    </tr>
+                    <tr>
+                        <th>BANK A/C NO </th>
+                        <th><input type="text"  value="216" id="rtr-loan-1-ACCOUNT_NUMBER"></th>
+                        <th><input type="text"  value="216" id="rtr-loan-2-ACCOUNT_NUMBER"></th>
+                        <th><input type="text"  value="216" id="rtr-loan-3-ACCOUNT_NUMBER"></th>
+                        <th><input type="text"  value="216" id="rtr-loan-4-ACCOUNT_NUMBER"></th>
+                        <th><input type="text"  value="2945" id="rtr-loan-5-ACCOUNT_NUMBER"></th>
+                    </tr>
+                    <tr>
+                        <th>Comments </th>
+                        <th><input type="text"  id="rtr-loan-1-COMMENTS"></th>
+                        <th><input type="text"  id="rtr-loan-2-COMMENTS"></th>
+                        <th><input type="text"  id="rtr-loan-3-COMMENTS"></th>
+                        <th><input type="text"  id="rtr-loan-4-COMMENTS"></th>
+                        <th><input type="text"  id="rtr-loan-5-COMMENTS"></th>
+                    </tr>
+                  </table>
+                  <button class="save-btn" id="rtr-btn">Save</button>
+
+                  <h2 class="heading">OVERVIEW :</h2>
+                  <table id="overview" class="overview">
+                    <tr>
+                      <th colspan="5" style="background-color: #dddddd;text-align: center;">SOURCING DETAILS</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">CASE NAME</th>
+                        <td colspan="3" style="text-align: center;">
+                          <input type="text" readonly id="ov-CASE_NAME">
+                      </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Application Id</th>
+                        <td><input type="text" readonly id="ov-APPLICATION_ID"></td>
+                        <th>Location</td>
+                        <td><input type="text" id="ov-LOCATION"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Sales Manager</th>
+                        <td><input type="text" id="ov-SALES_MANAGER"></td>
+                        <th>DST (non mandatory)</th>
+                        <td><input type="text" id="ov-DST"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Partner Type</th>
+                        <td><input type="text" id="ov-PARTNER_TYPE"></td>
+                        <th>Partner Name</th>
+                        <td><input type="text" id="ov-PARTNER_NAME"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="5" style="background-color: #dddddd;text-align: center;">OTHER DETAILS</th>
+                    </tr>
+                    <tr>
+                        <th>Loan Scheme</th>
+                        <td><input type="text" readonly id="ov-LOAN_SCHEME"></td>
+                        <th>Nature of Business</th>
+                        <td><input type="text" id="ov-NATURE_OF_BUSINESS"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Constitution</th>
+                        <td><input type="text" id="ov-CONSTITUTION"></td>
+                        <th>Industry</th>
+                        <td><input type="text" id="ov-INDUSTRY"></td>
+                        <th style="text-align: center;">FI Required</th>
+                    </tr>
+
+                    <tr>
+                        <th>Office 1 - Ownership</th>
+                        <td colspan="3"><input type="text" id="ov-OFFICE_OWNERSHIP_1"></td>
+                        <td rowspan="2"><input type="checkbox" id="ov-OFFICE_OWNERSHIP-FI_REQUIRED_1"></td>
+                    </tr>
+                    <tr>
+                        <th>Office 1 - Address</th>
+                        <td colspan="3"><input type="text" id="ov-OFFICE_ADDRESS_1"></td>
+                    </tr>
+                    <!-- <tr>
+                        <th>Office 2 - Ownership</th>
+                        <td colspan="3"><input type="text"></td>
+                        <td rowspan="2"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <th>Office 2 - Address</th>
+                        <td colspan="3"><input type="text"></td>
+                    </tr> -->
+
+
+                    <tr>
+                        <th>Residence 1 -  Ownership</th>
+                        <td colspan="3"><input type="text" id="ov-RESIDENCE_OWNERSHIP_1"></td>
+                        <td rowspan="2"><input type="checkbox" id="ov-RESIDENCE_OWNERSHIP-FI_REQUIRED_1"></td>
+                    </tr>
+                    <tr>
+                        <th>Residence 1 - Address</th>
+                        <td colspan="3"><input type="text" id="ov-RESIDENCE_ADDRESS_1"></td>
+                    </tr>
+                    <!-- <tr>
+                        <th>Residence 2 -  Ownership</th>
+                        <td colspan="3"><input type="text"></td>
+                        <td rowspan="2"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <th>Residence 2 - Address</th>
+                        <td colspan="3"><input type="text"></td>
+                    </tr> -->
+
+                    <tr>
+                        <th>Factory 1 -  Ownership</th>
+                        <td colspan="3"><input type="text" id="ov-FACTORY_OWNERSHIP_1"></td>
+                        <td rowspan="2"><input type="checkbox" id="ov-FACTORY_OWNERSHIP-FI_REQUIRED_1"></td>
+                    </tr>
+                    <tr>
+                        <th>Factory 1 - Address</th>
+                        <td colspan="3"><input type="text" id="ov-FACTORY_ADDRESS_1"></td>
+                    </tr>
+                    <!-- <tr>
+                        <th>Factory 2 -  Ownership</th>
+                        <td colspan="3"><input type="text"></td>
+                        <td rowspan="2"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <th>Factory 2 - Address</th>
+                        <td colspan="3"><input type="text"></td>
+                    </tr> -->
+
+                    <tr>
+                        <th>First Time Borrower for Un-Secured Loan?</th>
+                        <td><input type="text" id="ov-FIRST_TIME_BORROWER_UN_SECURED_LOAN"></td>
+                        <th>Availing an OD / CC limit?</th>
+                        <td><input type="text" id="ov-AVAILING_OD_CC_LIMIT"></td>
+                    </tr>
+                    <tr>
+                        <th>Company Website</th>
+                        <td colspan="4" style="text-align: center;"><input type="text" id="ov-COMPANY_WEBSITE"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="5" style="background-color: #dddddd;text-align: center;">PROMOTER DETAILS</th>
+                    </tr>
+                    <tr>
+                        <th>Basic Details</th>
+                        <th><input type="text" readonly style="float:left;width: 49%;text-align:right;border: none;" id="ov-bd-APPLICANT_TYPE-1"><span style="float:left;width:2%;">-</span><input type="text" readonly style="float:left;width:49%;text-align:left;border:none;" id="ov-bd-CUSTOMER_TYPE-1"></th>
+                        <th><input type="text" readonly style="float:left;width: 49%;text-align:right;border: none;" id="ov-bd-APPLICANT_TYPE-2"><span style="float:left;width:2%;">-</span><input type="text" readonly style="float:left;width:49%;text-align:left;border:none;" id="ov-bd-CUSTOMER_TYPE-2"></th>
+                        <th><input type="text" readonly style="float:left;width: 49%;text-align:right;border: none;" id="ov-bd-APPLICANT_TYPE-3"><span style="float:left;width:2%;">-</span><input type="text" readonly style="float:left;width:49%;text-align:left;border:none;" id="ov-bd-CUSTOMER_TYPE-3"></th>
+                        <th><input type="text" readonly style="float:left;width: 49%;text-align:right;border: none;" id="ov-bd-APPLICANT_TYPE-4"><span style="float:left;width:2%;">-</span><input type="text" readonly style="float:left;width:49%;text-align:left;border:none;" id="ov-bd-CUSTOMER_TYPE-4"></th>
+                    </tr>
+                    <tr>
+                        <th>Name of the Applicants</th>
+                        <td><input type="text" id="ov-bd-NAME-1"></td>
+                        <td><input type="text" id="ov-bd-NAME-2"></td>
+                        <td><input type="text" id="ov-bd-NAME-3"></td>
+                        <td><input type="text" id="ov-bd-NAME-4"></td>
+                    </tr>
+                    <tr>
+                        <th>Relation with</th>
+                        <td><input type="text" id="ov-bd-RELATION_WITH-1"></td>
+                        <td><input type="text" id="ov-bd-RELATION_WITH-2"></td>
+                        <td><input type="text" id="ov-bd-RELATION_WITH-3"></td>
+                        <td><input type="text" id="ov-bd-RELATION_WITH-4"></td>
+                    </tr>
+                    <tr>
+                        <th>Relationship</th>
+                        <td><input type="text" id="ov-bd-RELATIONSHIP-1"></td>
+                        <td><input type="text" id="ov-bd-RELATIONSHIP-2"></td>
+                        <td><input type="text" id="ov-bd-RELATIONSHIP-3"></td>
+                        <td><input type="text" id="ov-bd-RELATIONSHIP-4"></td>
+                    </tr>
+                    <tr>
+                        <th>DOB</th>
+                        <td><input type="text" readonly id="ov-bd-DOB-1"></td>
+                        <td><input type="text" readonly id="ov-bd-DOB-2"></td>
+                        <td><input type="text" readonly id="ov-bd-DOB-3"></td>
+                        <td><input type="text" readonly id="ov-bd-DOB-4"></td>
+                    </tr>
+                    <tr>
+                        <th>Percentage Stake Holding</th>
+                        <td><input type="text" id="ov-bd-PERCENTAGE_STAKE_HOLDING-1"></td>
+                        <td><input type="text" id="ov-bd-PERCENTAGE_STAKE_HOLDING-2"></td>
+                        <td><input type="text" id="ov-bd-PERCENTAGE_STAKE_HOLDING-3"></td>
+                        <td><input type="text" id="ov-bd-PERCENTAGE_STAKE_HOLDING-4"></td>
+                    </tr>
+                    <tr>
+                        <th>Educational Qualifications</th>
+                        <td><input type="text" id="ov-bd-EDUCATIONAL_QUALIFICATIONS-1"></td>
+                        <td><input type="text" id="ov-bd-EDUCATIONAL_QUALIFICATIONS-2"></td>
+                        <td><input type="text" id="ov-bd-EDUCATIONAL_QUALIFICATIONS-3"></td>
+                        <td><input type="text" id="ov-bd-EDUCATIONAL_QUALIFICATIONS-4"></td>
+                    </tr>
+                    <tr>
+                        <th>Working Since</th>
+                        <td><input type="text" id="ov-bd-WORKING_SINCE-1"></td>
+                        <td><input type="text" id="ov-bd-WORKING_SINCE-2"></td>
+                        <td><input type="text" id="ov-bd-WORKING_SINCE-3"></td>
+                        <td><input type="text" id="ov-bd-WORKING_SINCE-4"></td>
+                    </tr>
+                    <tr>
+                        <th>Work / Industry Experience</th>
+                        <td><input type="text" id="ov-bd-WORK_INDUSTRY_EXPERIENCE-1"></td>
+                        <td><input type="text" id="ov-bd-WORK_INDUSTRY_EXPERIENCE-2"></td>
+                        <td><input type="text" id="ov-bd-WORK_INDUSTRY_EXPERIENCE-3"></td>
+                        <td><input type="text" id="ov-bd-WORK_INDUSTRY_EXPERIENCE-4"></td>
+                    </tr>
+                    <tr>
+                        <th>CIBIL Score</th>
+                        <td><input type="text" readonly id="ov-bd-CIBIL_SCORE-1"></td>
+                        <td><input type="text" readonly id="ov-bd-CIBIL_SCORE-2"></td>
+                        <td><input type="text" readonly id="ov-bd-CIBIL_SCORE-3"></td>
+                        <td><input type="text" readonly id="ov-bd-CIBIL_SCORE-4"></td>
+                    </tr>
+                    <tr>
+                          <th>Linkedin</th>
+                          <td><input type="text"  id="ov-bd-LINKEDIN-1"></td>
+                          <td><input type="text"  id="ov-bd-LINKEDIN-2"></td>
+                          <td><input type="text"  id="ov-bd-LINKEDIN-3"></td>
+                          <td><input type="text"  id="ov-bd-LINKEDIN-4"></td>
+                      </tr>
+                    <tr>
+                        <th colspan="5" style="background-color: #dddddd;text-align: center;">INITIAL CHECKS</th>
+                    </tr>
+                    <tr>
+                        <th colspan="1">Google Search</th>
+                        <td colspan="4"><input type="text" style="text-align: center;" id="ov-GOOGLE_SEARCH"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="1">Watchout Investor</th>
+                        <td colspan="4"><input type="text" style="text-align: center;" id="ov-WATCHOUT_INVESTOR"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="1">BIFR</th>
+                        <td colspan="4"><input type="text" style="text-align: center;"  id="ov-BIFR"></td>
+                    </tr>
+                   <tr>    
+                        <th colspan="1">RBI Defaulter List</th>
+                        <td colspan="4"><input type="text" style="text-align: center;"  id="ov-RBI_DEFAULTER_LIST"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" style="background-color: #dddddd;text-align: center;">ELIGIBILITY COMPUTATION	</th>
+                        <th colspan="2" style="background-color: #dddddd;text-align: center;">Deviations</th>
+                        <th colspan="2" style="background-color: #dddddd;text-align: center;">Deviation Code</th>
+                    </tr>
+                    <tr>    
+                        <th>Proposed Loan Amount (in lakhs)</th>
+                        <td><input type="number" name='overview' id="ov-PROPOSED_LOAN_AMOUNT"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-1"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-1"></td>
+                    </tr>
+                    <tr>  
+                        <th>Rate of Interest</th>
+                        <td><input type="number" name='overview' id="ov-RATE_OF_INTEREST"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-2"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-2"></td>
+                    </tr>
+                    <tr>  
+                        <th>Tenure (Months)</th>
+                        <td><input type="number" name='overview' id="ov-TENURE"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-3"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-3"></td>
+                    </tr>
+                    <tr>  
+                        <th>Monthly EMI</th>
+                        <td><input type="number" readonly id="ov-MONTHLY_EMI"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-4"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-4"></td>
+                    </tr>
+                    <tr>  
+                        <th colspan="2" style="background-color: #dddddd;text-align: center;">INDICATORS	</th>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-5"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-5"></td>
+                    </tr>   
+                    <tr>  
+                        <th>DSCR</th>
+                        <td><input type="text" id="ov-DSCR_TOTAL"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-6"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-6"></td>
+                    </tr>
+                    <tr>  
+                        <th>ABB (in Lacs)</th>
+                        <td><input type="text" id="ov-ABB"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-7"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-7"></td>
+                    </tr>
+                    <tr>  
+                        <th>Banking Throughput</th>
+                        <td><input type="text" id="ov-BANKING_THROUGHPUT"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-8"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-8"></td>
+                    </tr>
+                    <tr>  
+                        <th>VAT Throughput</th>
+                        <td><input type="text" id="ov-VAT_THROUGHPUT"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-9"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-9"></td>
+                    </tr>
+                    <tr>  
+                        <th>Leverage</th>
+                        <td><input type="text" id="ov-LEVERAGE"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-10"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-10"></td>
+                    </tr>
+                    <tr>  
+                        <th>Borrowing to Turnover Ratio</th>
+                        <td><input type="text" id="ov-BORROWING_TO_TURNOVER_RATIO"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-11"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-11"></td>
+                    </tr>
+                    <tr>  
+                        <th>Working Capital Gap</th>
+                        <td><input type="text" id="ov-WORKING_CAPITAL_GAP"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-12"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-12"></td>
+                    </tr>
+                    <tr>  
+                        <th>Topline Trendt</th>
+                        <td><input type="text" id="ov-TOPLINE_TREND"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-13"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-13"></td>
+                    </tr>
+                    <tr>  
+                        <th>Bottomline Trend</th>
+                        <td><input type="text" id="ov-BOTTOMLINE_TREND"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-14"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-14"></td>
+                    </tr>
+                    <tr>  
+                        <th>OPBDIT Trend</th>
+                        <td><input type="text" id="ov-OPBDIT_TREND"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-15"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-15"></td>
+                    </tr>
+                    <tr>  
+                        <th>TNW Trend</th>
+                        <td><input type="text" id="ov-TNW_TREND"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-16"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-16"></td>
+                    </tr>
+                    <tr>  
+                        <th>Cheque bounce ratio</th>
+                        <td><input type="text" id="ov-CHEQUE_BOUNCE_RATIO"></td>
+                        <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-17"></td>
+                        <td><input type="text" id="ov-DEVIATIONS_CODE-17"></td>
+                    </tr>
+                  </table>  
+                  <button class="save-btn" id="ov-btn">Save</button>
+
+          <h2 class="heading">Financial Analysis :</h2>
           <table id="pl" class="pl">
               <tr>
                 <th>Profilt & Los account</th>
@@ -863,33 +1340,33 @@
                     </tr>
                     <tr>
                       <th> PAT (from P&L after Tax deduction)  </th>
-                      <th><input type="number" readonly key="PAT" id="dscr-c-1"></th>
-                      <th><input type="number" readonly key="PAT" id="dscr-y-1"></th>
+                      <th><input type="number" readonly key="PAT" id="dscr-ca-c-1"></th>
+                      <th><input type="number" readonly key="PAT" id="dscr-ca-y-1"></th>
                     </tr>  
                     <tr>
                         <th> Depreciation (from P&L)  </th>
-                        <th><input type="number" readonly key="DEPRECIATION" id="dscr-c-2"></th>
-                        <th><input type="number" readonly key="DEPRECIATION" id="dscr-y-2"></th>
+                        <th><input type="number" readonly key="DEPRECIATION" id="dscr-ca-c-2"></th>
+                        <th><input type="number" readonly key="DEPRECIATION" id="dscr-ca-y-2"></th>
                       </tr>
                       <tr>
                           <th> Interest on Partners' capital (from P&L)  </th>
-                          <th><input type="number" readonly key="INTEREST_ON_PARTNERS_CAPITAL" id="dscr-c-3"></th>
-                          <th><input type="number" readonly key="INTEREST_ON_PARTNERS_CAPITAL" id="dscr-y-3"></th>
+                          <th><input type="number" readonly key="INTEREST_ON_PARTNERS_CAPITAL" id="dscr-ca-c-3"></th>
+                          <th><input type="number" readonly key="INTEREST_ON_PARTNERS_CAPITAL" id="dscr-ca-y-3"></th>
                         </tr> 
                         <tr>
                             <th> Salaries to Partners/ Directors Remuneration(from P&L)  </th>
-                            <th><input type="number" readonly key="SALARIES_TO_PARTNERS_OR_DIRECTORS_REMUNERATION" id="dscr-c-4"></th>
-                            <th><input type="number" readonly key="SALARIES_TO_PARTNERS_OR_DIRECTORS_REMUNERATION" id="dscr-y-4"></th>
+                            <th><input type="number" readonly key="SALARIES_TO_PARTNERS_OR_DIRECTORS_REMUNERATION" id="dscr-ca-c-4"></th>
+                            <th><input type="number" readonly key="SALARIES_TO_PARTNERS_OR_DIRECTORS_REMUNERATION" id="dscr-ca-y-4"></th>
                           </tr>
                           <tr>
                               <th>Interest paid on all loans (from P&L)  </th>
-                              <th><input type="number" readonly key="INTEREST_PAID_ON_ALL_LOANS" id="dscr-c-5"></th>
-                              <th><input type="number" readonly key="INTEREST_PAID_ON_ALL_LOANS" id="dscr-y-5"></th>
+                              <th><input type="number"  key="INTEREST_PAID_ON_ALL_LOANS" id="dscr-ca-c-5"></th>
+                              <th><input type="number"  key="INTEREST_PAID_ON_ALL_LOANS" id="dscr-ca-y-5"></th>
                           </tr> 
                           <tr>
                               <th>Total </th>
-                              <th><input type="number" readonly key="TOTAL" id="dscr-c-6"></th>
-                              <th><input type="number" readonly key="TOTAL" id="dscr-y-6"></th>
+                              <th><input type="number" readonly key="TOTAL" id="dscr-ca-c-6"></th>
+                              <th><input type="number" readonly key="TOTAL" id="dscr-ca-y-6"></th>
                           </tr>
                           <tr>
                               <th>OBLIGATIONS</th>
@@ -898,28 +1375,28 @@
                           </tr> 
                           <tr>
                               <th>All retail obligations (Sum of EMIs) </th>
-                              <th><input type="number" readonly key="" id="dscr-c-7"></th>
-                              <th><input type="number" readonly key="" id="dscr-y-7"></th>
+                              <th><input type="number" readonly key="ALL_RETAIL_OBLIGATIONS" id="dscr-ob-c-7"></th>
+                              <th><input type="number" readonly key="ALL_RETAIL_OBLIGATIONS" id="dscr-ob-y-7"></th>
                           </tr>
                           <tr>
                               <th>Interest on CC facility </th>
-                              <th><input type="number" readonly key="" id="dscr-c-8"></th>
-                              <th><input type="number" readonly key="" id="dscr-y-8"></th>
+                              <th><input type="number" readonly key="INTEREST_ON_CC_FACILITY" id="dscr-ob-c-8"></th>
+                              <th><input type="number" readonly key="INTEREST_ON_CC_FACILITY" id="dscr-ob-y-8"></th>
                           </tr> 
                           <tr>
                               <th>Proposed INCRED EMI </th>
-                              <th><input type="number" readonly key="" id="dscr-c-9"></th>
-                              <th><input type="number" readonly key="" id="dscr-y-9"></th>
+                              <th><input type="number" readonly key="PROPOSED_INCRED_EMI" id="dscr-ob-c-9"></th>
+                              <th><input type="number" readonly key="PROPOSED_INCRED_EMI" id="dscr-ob-y-9"></th>
                           </tr>
                           <tr>
                               <th>Interest paid on all loans (from P&L) </th>
-                              <th><input type="number" readonly key="" id="dscr-c-10"></th>
-                              <th><input type="number" readonly key="" id="dscr-y-10"></th>
+                              <th><input type="number" readonly key="INTEREST_PAID_ON_ALL_LOANS" id="dscr-ob-c-10"></th>
+                              <th><input type="number" readonly key="INTEREST_PAID_ON_ALL_LOANS" id="dscr-ob-y-10"></th>
                           </tr>
                           <tr>
                               <th>Total</th>
-                              <th><input type="number" readonly key="" id="dscr-c-11"></th>
-                              <th><input type="number" readonly key="" id="dscr-y-11"></th>
+                              <th><input type="number" readonly key="TOTAL" id="dscr-ob-c-11"></th>
+                              <th><input type="number" readonly key="TOTAL" id="dscr-ob-y-11"></th>
                           </tr>
                           <tr>
                               <th></th>
@@ -929,7 +1406,7 @@
                           <tr>
                               <th>Total</th>
                               <th></th>
-                              <th><input type="number" readonly key="" id="DSCR_TOTAL"></th>
+                              <th><input type="number" readonly key="DSCR_TOTAL" id="DSCR_TOTAL"></th>
                           </tr> 
                   </table>
 
@@ -1087,565 +1564,88 @@
                   </table>
                   <button class="save-btn" id="pd-btn">Save</button>
 
-                  <h2 class="heading">RTR :</h2>
-                  <table id="rtr" class="rtr">
-                      <tr>
-                        <th></th>
-                        <th>Loan 1</th>
-                        <th>Loan 2</th>
-                        <th>Loan 3</th>
-                        <th>Loan 4</th>
-                        <th>Loan 5</th>
-                        <th>Total</th>
-                      </tr>
-                      <tr>
-                        <th>Lender Name  </th>
-                        <th><input type="text" value="Capital First"         id="rtr-loan-1-LENDER_NAME"></th>
-                        <th><input type="text" value="Aditya Birla Fin."     id="rtr-loan-2-LENDER_NAME"></th>
-                        <th><input type="text" value="Edelweiss Retail Fine" id="rtr-loan-3-LENDER_NAME"></th>
-                        <th><input type="text" value="HDFC"                  id="rtr-loan-4-LENDER_NAME"></th>
-                        <th><input type="text" value="ICIC Bank"             id="rtr-loan-5-LENDER_NAME"></th>
-                      </tr>
-                      <tr>
-                        <th>Product  </th>
-                        <th><input type="text" value="B/L"  id="rtr-loan-1-PRODUCT"></th>
-                        <th><input type="text" value="B/L"  id="rtr-loan-2-PRODUCT"></th>
-                        <th><input type="text" value="B/L"  id="rtr-loan-3-PRODUCT"></th>
-                        <th><input type="text" value="B/L"  id="rtr-loan-4-PRODUCT"></th>
-                        <th><input type="text" value="B/L"  id="rtr-loan-5-PRODUCT"></th>
-                      </tr>
-                      <tr>
-                          <th>Initial Loan Amt (In lacs)  </th>
-                          <th><input type="number" name='rtr' value="75.00"  id="rtr-loan-1-INITIAL_LOAN_AMT"></th>
-                          <th><input type="number" name='rtr' value="30.00"  id="rtr-loan-2-INITIAL_LOAN_AMT"></th>
-                          <th><input type="number" name='rtr' value="40.00"  id="rtr-loan-3-INITIAL_LOAN_AMT"></th>
-                          <th><input type="number" name='rtr' value="50.00"  id="rtr-loan-4-INITIAL_LOAN_AMT"></th>
-                          <th><input type="number" name='rtr' value="34.50"  id="rtr-loan-5-INITIAL_LOAN_AMT"></th>
-                          <th><input type="number" name='rtr' id="rtr-TOTAL_INITIAL_LOAN_AMOUNT"></th>
-                      </tr>
-                      <tr>
-                          <th>Current Outstanding (In Lacs)  </th>
-                          <th><input type="number" name='rtr' value="63.47"  id="rtr-loan-1-CURRENT_OUTSTANDING"></th>
-                          <th><input type="number" name='rtr' value="24.68"  id="rtr-loan-2-CURRENT_OUTSTANDING"></th>
-                          <th><input type="number" name='rtr' value="39.16"  id="rtr-loan-3-CURRENT_OUTSTANDING"></th>
-                          <th><input type="number" name='rtr' value="46.67"  id="rtr-loan-4-CURRENT_OUTSTANDING"></th>
-                          <th><input type="number" name='rtr' value="32.04"  id="rtr-loan-5-CURRENT_OUTSTANDING"></th>
-                          <th><input type="number" name='rtr' id="rtr-TOTAL_CURRENT_OUTSTANDING"></th>
-                      </tr>
-                      <tr>
-                          <th>Start Date  </th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="05/10/16" id="rtr-loan-1-START_DATE"></th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="05/05/16" id="rtr-loan-2-START_DATE"></th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="05/01/17" id="rtr-loan-3-START_DATE"></th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="04/01/17" id="rtr-loan-4-START_DATE"></th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="05/10/16" id="rtr-loan-5-START_DATE"></th>
-                      </tr>
-                      <tr>
-                          <th>End Date  </th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="05/09/19" id="rtr-loan-1-END_DATE"></th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="05/04/16" id="rtr-loan-2-END_DATE"></th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="05/12/19" id="rtr-loan-3-END_DATE"></th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="05/09/19" id="rtr-loan-4-END_DATE"></th>
-                          <th><input type="text"  class='example1'  readonly name='rtr' value="05/09/19" id="rtr-loan-5-END_DATE"></th>
-                      </tr>
-                      <tr>
-                          <th>Vintage (MOB)  </th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-1-VINTAGE"></th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-2-VINTAGE"></th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-3-VINTAGE"></th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-4-VINTAGE"></th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-5-VINTAGE"></th>
-                      </tr>
-                      <tr>
-                          <th>Bal Tenor (Months)  </th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-1-BALANCE_TENURE"></th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-2-BALANCE_TENURE"></th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-3-BALANCE_TENURE"></th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-4-BALANCE_TENURE"></th>
-                          <th><input type="number" name='rtr' readonly id="rtr-loan-5-BALANCE_TENURE"></th>
-                      </tr>
-                      <tr>
-                          <th>EMI Obligated? </th>
-                          <th><input type="text" readonly id="rtr-loan-1-IS_EMI_OBLIGATED"></th>
-                          <th><input type="text" readonly id="rtr-loan-2-IS_EMI_OBLIGATED"></th>
-                          <th><input type="text" readonly id="rtr-loan-3-IS_EMI_OBLIGATED"></th>
-                          <th><input type="text" readonly id="rtr-loan-4-IS_EMI_OBLIGATED"></th>
-                          <th><input type="text" readonly id="rtr-loan-5-IS_EMI_OBLIGATED"></th>
-                      </tr>
-                      <tr>
-                          <th>Do you want to overwrite ? </th>
-                          <th><input type="checkbox"  id="rtr-loan-1-OVERWRITE_EMI_OBLIGATED"></th>
-                          <th><input type="checkbox"  id="rtr-loan-2-OVERWRITE_EMI_OBLIGATED"></th>
-                          <th><input type="checkbox"  id="rtr-loan-3-OVERWRITE_EMI_OBLIGATED"></th>
-                          <th><input type="checkbox"  id="rtr-loan-4-OVERWRITE_EMI_OBLIGATED"></th>
-                          <th><input type="checkbox"  id="rtr-loan-5-OVERWRITE_EMI_OBLIGATED"></th>
-                      </tr>
-                      <tr>
-                          <th>EMI </th>
-                          <th><input type="number"  name='rtr' value="273406" id="rtr-loan-1-EMI"></th>
-                          <th><input type="number"  name='rtr' value="109212" id="rtr-loan-2-EMI"></th>
-                          <th><input type="number"  name='rtr' value="145615" id="rtr-loan-3-EMI"></th>
-                          <th><input type="number"  name='rtr' value="175169" id="rtr-loan-4-EMI"></th>
-                          <th><input type="number"  name='rtr' value="120422" id="rtr-loan-5-EMI"></th>
-                          <th><input type="number"  name='rtr' id="rtr-TOTAL_EMI"></th>
-                      </tr>
-                      <tr>
-                          <th>No of Bounces </th>
-                          <th><input type="text"  id="rtr-loan-1-NUMBER_OF_BOUNCES"></th>
-                          <th><input type="text"  id="rtr-loan-2-NUMBER_OF_BOUNCES"></th>
-                          <th><input type="text"  id="rtr-loan-3-NUMBER_OF_BOUNCES"></th>
-                          <th><input type="text"  id="rtr-loan-4-NUMBER_OF_BOUNCES"></th>
-                          <th><input type="text"  id="rtr-loan-5-NUMBER_OF_BOUNCES"></th>
-                      </tr>
-                      <tr><th>Repayment Schedule </th></tr>
-                      <tr>
-                          <th><input type="text"  class='example1'   value="01/11/16" id="rtr-REPAYMENT_SCHEDULE_1"> </th>
-                          <th><input type="text"  class='example1'   value="05/11/16" id="rtr-loan-1-REPAYMENT_SCHEDULE_1"></th>
-                          <th><input type="text"  class='example1'   value="05/11/16" id="rtr-loan-2-REPAYMENT_SCHEDULE_1"></th>
-                          <th><input type="text"  class='example1'   value="NA" id="rtr-loan-3-REPAYMENT_SCHEDULE_1"></th>
-                          <th><input type="text"  class='example1'   id="rtr-loan-4-REPAYMENT_SCHEDULE_1"></th>
-                          <th><input type="text"  class='example1'   id="rtr-loan-5-REPAYMENT_SCHEDULE_1"></th>
-                      </tr>
-                      <tr>
-                          <th><input type="text"  class='example1'   value="01/12/16" id="rtr-REPAYMENT_SCHEDULE_2"> </th>
-                          <th><input type="text"  class='example1'   value="05/12/16" id="rtr-loan-1-REPAYMENT_SCHEDULE_2"></th>
-                          <th><input type="text"  class='example1'   value="05/12/16" id="rtr-loan-2-REPAYMENT_SCHEDULE_2"></th>
-                          <th><input type="text"  class='example1'   value="NOT FOUND" id="rtr-loan-3-REPAYMENT_SCHEDULE_2"></th>
-                          <th><input type="text"  class='example1'   id="rtr-loan-4-REPAYMENT_SCHEDULE_2"></th>
-                          <th><input type="text"  class='example1'   id="rtr-loan-5-REPAYMENT_SCHEDULE_2"></th>
-                      </tr>
-                      <tr>
-                          <th><input type="text"  class='example1'   value="01/01/17" id="rtr-REPAYMENT_SCHEDULE_3"> </th>
-                          <th><input type="text"  class='example1'   value="05/01/17" id="rtr-loan-1-REPAYMENT_SCHEDULE_3"></th>
-                          <th><input type="text"  class='example1'   value="05/01/17" id="rtr-loan-2-REPAYMENT_SCHEDULE_3"></th>
-                          <th><input type="text"  class='example1'   value="05/01/17" id="rtr-loan-3-REPAYMENT_SCHEDULE_3"></th>
-                          <th><input type="text"  class='example1'   id="rtr-loan-4-REPAYMENT_SCHEDULE_3"></th>
-                          <th><input type="text"  class='example1'   id="rtr-loan-5-REPAYMENT_SCHEDULE_3"></th>
-                      </tr>
-                      <tr>
-                          <th>BANK A/C NO </th>
-                          <th><input type="text"  value="216" id="rtr-loan-1-ACCOUNT_NUMBER"></th>
-                          <th><input type="text"  value="216" id="rtr-loan-2-ACCOUNT_NUMBER"></th>
-                          <th><input type="text"  value="216" id="rtr-loan-3-ACCOUNT_NUMBER"></th>
-                          <th><input type="text"  value="216" id="rtr-loan-4-ACCOUNT_NUMBER"></th>
-                          <th><input type="text"  value="2945" id="rtr-loan-5-ACCOUNT_NUMBER"></th>
-                      </tr>
-                      <tr>
-                          <th>Comments </th>
-                          <th><input type="text"  id="rtr-loan-1-COMMENTS"></th>
-                          <th><input type="text"  id="rtr-loan-2-COMMENTS"></th>
-                          <th><input type="text"  id="rtr-loan-3-COMMENTS"></th>
-                          <th><input type="text"  id="rtr-loan-4-COMMENTS"></th>
-                          <th><input type="text"  id="rtr-loan-5-COMMENTS"></th>
-                      </tr>
-                    </table>
-                    <button class="save-btn" id="rtr-btn">Save</button>
-
-                    <h2 class="heading">OVERVIEW :</h2>
-                    <table id="overview" class="overview">
-                      <tr>
-                        <th colspan="5" style="background-color: #dddddd;text-align: center;">SOURCING DETAILS</th>
-                      </tr>
-                      <tr>
-                          <th colspan="2">CASE NAME</th>
-                          <td colspan="3" style="text-align: center;">
-                            <input type="text" readonly id="ov-CASE_NAME">
-                        </td>
-                      </tr>
-                      <tr>
-                          <th colspan="2">Application Id</th>
-                          <td><input type="text" readonly id="ov-APPLICATION_ID"></td>
-                          <th>Location</td>
-                          <td><input type="text" id="ov-LOCATION"></td>
-                      </tr>
-                      <tr>
-                          <th colspan="2">Sales Manager</th>
-                          <td><input type="text" id="ov-SALES_MANAGER"></td>
-                          <th>DST (non mandatory)</th>
-                          <td><input type="text" id="ov-DST"></td>
-                      </tr>
-                      <tr>
-                          <th colspan="2">Partner Type</th>
-                          <td><input type="text" id="ov-PARTNER_TYPE"></td>
-                          <th>Partner Name</th>
-                          <td><input type="text" id="ov-PARTNER_NAME"></td>
-                      </tr>
-                      <tr>
-                          <th colspan="5" style="background-color: #dddddd;text-align: center;">OTHER DETAILS</th>
-                      </tr>
-                      <tr>
-                          <th>Loan Scheme</th>
-                          <td><input type="text" readonly id="ov-LOAN_SCHEME"></td>
-                          <th>Nature of Business</th>
-                          <td><input type="text" id="ov-NATURE_OF_BUSINESS"></td>
-                          <td></td>
-                      </tr>
-                      <tr>
-                          <th>Constitution</th>
-                          <td><input type="text" id="ov-CONSTITUTION"></td>
-                          <th>Industry</th>
-                          <td><input type="text" id="ov-INDUSTRY"></td>
-                          <th style="text-align: center;">FI Required</th>
-                      </tr>
-
-                      <tr>
-                          <th>Office 1 - Ownership</th>
-                          <td colspan="3"><input type="text" id="ov-OFFICE_OWNERSHIP_1"></td>
-                          <td rowspan="2"><input type="checkbox" id="ov-OFFICE_OWNERSHIP-FI_REQUIRED_1"></td>
-                      </tr>
-                      <tr>
-                          <th>Office 1 - Address</th>
-                          <td colspan="3"><input type="text" id="ov-OFFICE_ADDRESS_1"></td>
-                      </tr>
-                      <!-- <tr>
-                          <th>Office 2 - Ownership</th>
-                          <td colspan="3"><input type="text"></td>
-                          <td rowspan="2"><input type="checkbox"></td>
-                      </tr>
-                      <tr>
-                          <th>Office 2 - Address</th>
-                          <td colspan="3"><input type="text"></td>
-                      </tr> -->
-
-
-                      <tr>
-                          <th>Residence 1 -  Ownership</th>
-                          <td colspan="3"><input type="text" id="ov-RESIDENCE_OWNERSHIP_1"></td>
-                          <td rowspan="2"><input type="checkbox" id="ov-RESIDENCE_OWNERSHIP-FI_REQUIRED_1"></td>
-                      </tr>
-                      <tr>
-                          <th>Residence 1 - Address</th>
-                          <td colspan="3"><input type="text" id="ov-RESIDENCE_ADDRESS_1"></td>
-                      </tr>
-                      <!-- <tr>
-                          <th>Residence 2 -  Ownership</th>
-                          <td colspan="3"><input type="text"></td>
-                          <td rowspan="2"><input type="checkbox"></td>
-                      </tr>
-                      <tr>
-                          <th>Residence 2 - Address</th>
-                          <td colspan="3"><input type="text"></td>
-                      </tr> -->
-
-                      <tr>
-                          <th>Factory 1 -  Ownership</th>
-                          <td colspan="3"><input type="text" id="ov-FACTORY_OWNERSHIP_1"></td>
-                          <td rowspan="2"><input type="checkbox" id="ov-FACTORY_OWNERSHIP-FI_REQUIRED_1"></td>
-                      </tr>
-                      <tr>
-                          <th>Factory 1 - Address</th>
-                          <td colspan="3"><input type="text" id="ov-FACTORY_ADDRESS_1"></td>
-                      </tr>
-                      <!-- <tr>
-                          <th>Factory 2 -  Ownership</th>
-                          <td colspan="3"><input type="text"></td>
-                          <td rowspan="2"><input type="checkbox"></td>
-                      </tr>
-                      <tr>
-                          <th>Factory 2 - Address</th>
-                          <td colspan="3"><input type="text"></td>
-                      </tr> -->
-
-                      <tr>
-                          <th>First Time Borrower for Un-Secured Loan?</th>
-                          <td><input type="text" id="ov-FIRST_TIME_BORROWER_UN_SECURED_LOAN"></td>
-                          <th>Availing an OD / CC limit?</th>
-                          <td><input type="text" id="ov-AVAILING_OD_CC_LIMIT"></td>
-                      </tr>
-                      <tr>
-                          <th>Company Website</th>
-                          <td colspan="4" style="text-align: center;"><input type="text" id="ov-COMPANY_WEBSITE"></td>
-                      </tr>
-                      <tr>
-                          <th colspan="5" style="background-color: #dddddd;text-align: center;">PROMOTER DETAILS</th>
-                      </tr>
-                      <tr>
-                          <th>Basic Details</th>
-                          <th><input type="text" readonly style="float:left;width: 49%;text-align:right;border: none;" id="ov-bd-APPLICANT_TYPE-1"><span style="float:left;width:2%;">-</span><input type="text" readonly style="float:left;width:49%;text-align:left;border:none;" id="ov-bd-CUSTOMER_TYPE-1"></th>
-                          <th><input type="text" readonly style="float:left;width: 49%;text-align:right;border: none;" id="ov-bd-APPLICANT_TYPE-2"><span style="float:left;width:2%;">-</span><input type="text" readonly style="float:left;width:49%;text-align:left;border:none;" id="ov-bd-CUSTOMER_TYPE-2"></th>
-                          <th><input type="text" readonly style="float:left;width: 49%;text-align:right;border: none;" id="ov-bd-APPLICANT_TYPE-3"><span style="float:left;width:2%;">-</span><input type="text" readonly style="float:left;width:49%;text-align:left;border:none;" id="ov-bd-CUSTOMER_TYPE-3"></th>
-                          <th><input type="text" readonly style="float:left;width: 49%;text-align:right;border: none;" id="ov-bd-APPLICANT_TYPE-4"><span style="float:left;width:2%;">-</span><input type="text" readonly style="float:left;width:49%;text-align:left;border:none;" id="ov-bd-CUSTOMER_TYPE-4"></th>
-                      </tr>
-                      <tr>
-                          <th>Name of the Applicants</th>
-                          <td><input type="text" id="ov-bd-NAME-1"></td>
-                          <td><input type="text" id="ov-bd-NAME-2"></td>
-                          <td><input type="text" id="ov-bd-NAME-3"></td>
-                          <td><input type="text" id="ov-bd-NAME-4"></td>
-                      </tr>
-                      <tr>
-                          <th>Relation with</th>
-                          <td><input type="text" id="ov-bd-RELATION_WITH-1"></td>
-                          <td><input type="text" id="ov-bd-RELATION_WITH-2"></td>
-                          <td><input type="text" id="ov-bd-RELATION_WITH-3"></td>
-                          <td><input type="text" id="ov-bd-RELATION_WITH-4"></td>
-                      </tr>
-                      <tr>
-                          <th>Relationship</th>
-                          <td><input type="text" id="ov-bd-RELATIONSHIP-1"></td>
-                          <td><input type="text" id="ov-bd-RELATIONSHIP-2"></td>
-                          <td><input type="text" id="ov-bd-RELATIONSHIP-3"></td>
-                          <td><input type="text" id="ov-bd-RELATIONSHIP-4"></td>
-                      </tr>
-                      <tr>
-                          <th>DOB</th>
-                          <td><input type="text" readonly id="ov-bd-DOB-1"></td>
-                          <td><input type="text" readonly id="ov-bd-DOB-2"></td>
-                          <td><input type="text" readonly id="ov-bd-DOB-3"></td>
-                          <td><input type="text" readonly id="ov-bd-DOB-4"></td>
-                      </tr>
-                      <tr>
-                          <th>Percentage Stake Holding</th>
-                          <td><input type="text" id="ov-bd-PERCENTAGE_STAKE_HOLDING-1"></td>
-                          <td><input type="text" id="ov-bd-PERCENTAGE_STAKE_HOLDING-2"></td>
-                          <td><input type="text" id="ov-bd-PERCENTAGE_STAKE_HOLDING-3"></td>
-                          <td><input type="text" id="ov-bd-PERCENTAGE_STAKE_HOLDING-4"></td>
-                      </tr>
-                      <tr>
-                          <th>Educational Qualifications</th>
-                          <td><input type="text" id="ov-bd-EDUCATIONAL_QUALIFICATIONS-1"></td>
-                          <td><input type="text" id="ov-bd-EDUCATIONAL_QUALIFICATIONS-2"></td>
-                          <td><input type="text" id="ov-bd-EDUCATIONAL_QUALIFICATIONS-3"></td>
-                          <td><input type="text" id="ov-bd-EDUCATIONAL_QUALIFICATIONS-4"></td>
-                      </tr>
-                      <tr>
-                          <th>Working Since</th>
-                          <td><input type="text" id="ov-bd-WORKING_SINCE-1"></td>
-                          <td><input type="text" id="ov-bd-WORKING_SINCE-2"></td>
-                          <td><input type="text" id="ov-bd-WORKING_SINCE-3"></td>
-                          <td><input type="text" id="ov-bd-WORKING_SINCE-4"></td>
-                      </tr>
-                      <tr>
-                          <th>Work / Industry Experience</th>
-                          <td><input type="text" id="ov-bd-WORK_INDUSTRY_EXPERIENCE-1"></td>
-                          <td><input type="text" id="ov-bd-WORK_INDUSTRY_EXPERIENCE-2"></td>
-                          <td><input type="text" id="ov-bd-WORK_INDUSTRY_EXPERIENCE-3"></td>
-                          <td><input type="text" id="ov-bd-WORK_INDUSTRY_EXPERIENCE-4"></td>
-                      </tr>
-                      <tr>
-                          <th>CIBIL Score</th>
-                          <td><input type="text" readonly id="ov-bd-CIBIL_SCORE-1"></td>
-                          <td><input type="text" readonly id="ov-bd-CIBIL_SCORE-2"></td>
-                          <td><input type="text" readonly id="ov-bd-CIBIL_SCORE-3"></td>
-                          <td><input type="text" readonly id="ov-bd-CIBIL_SCORE-4"></td>
-                      </tr>
-                      <tr>
-                            <th>Linkedin</th>
-                            <td><input type="text"  id="ov-bd-LINKEDIN-1"></td>
-                            <td><input type="text"  id="ov-bd-LINKEDIN-2"></td>
-                            <td><input type="text"  id="ov-bd-LINKEDIN-3"></td>
-                            <td><input type="text"  id="ov-bd-LINKEDIN-4"></td>
-                        </tr>
-                      <tr>
-                          <th colspan="5" style="background-color: #dddddd;text-align: center;">INITIAL CHECKS</th>
-                      </tr>
-                      <tr>
-                          <th colspan="1">Google Search</th>
-                          <td colspan="4"><input type="text" style="text-align: center;" id="ov-GOOGLE_SEARCH"></td>
-                      </tr>
-                      <tr>
-                          <th colspan="1">Watchout Investor</th>
-                          <td colspan="4"><input type="text" style="text-align: center;" id="ov-WATCHOUT_INVESTOR"></td>
-                      </tr>
-                      <tr>
-                          <th colspan="1">BIFR</th>
-                          <td colspan="4"><input type="text" style="text-align: center;"  id="ov-BIFR"></td>
-                      </tr>
-                     <tr>    
-                          <th colspan="1">RBI Defaulter List</th>
-                          <td colspan="4"><input type="text" style="text-align: center;"  id="ov-RBI_DEFAULTER_LIST"></td>
-                      </tr>
-                      <tr>
-                          <th colspan="2" style="background-color: #dddddd;text-align: center;">ELIGIBILITY COMPUTATION	</th>
-                          <th colspan="2" style="background-color: #dddddd;text-align: center;">Deviations</th>
-                          <th colspan="2" style="background-color: #dddddd;text-align: center;">Deviation Code</th>
-                      </tr>
-                      <tr>    
-                          <th>Proposed Loan Amount (in lakhs)</th>
-                          <td><input type="number" id="ov-PROPOSED_LOAN_AMOUNT"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-1"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-1"></td>
-                      </tr>
-                      <tr>  
-                          <th>Rate of Interest</th>
-                          <td><input type="number" id="ov-RATE_OF_INTEREST"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-2"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-2"></td>
-                      </tr>
-                      <tr>  
-                          <th>Tenure (Months)</th>
-                          <td><input type="number" id="ov-TENURE"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-3"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-3"></td>
-                      </tr>
-                      <tr>  
-                          <th>Monthly EMI</th>
-                          <td><input type="number" id="ov-MONTHLY_EMI"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-4"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-4"></td>
-                      </tr>
-                      <tr>  
-                          <th colspan="2" style="background-color: #dddddd;text-align: center;">INDICATORS	</th>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-5"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-5"></td>
-                      </tr>   
-                      <tr>  
-                          <th>DSCR</th>
-                          <td><input type="text" id="ov-DSCR"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-6"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-6"></td>
-                      </tr>
-                      <tr>  
-                          <th>ABB (in Lacs)</th>
-                          <td><input type="text" id="ov-ABB"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-7"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-7"></td>
-                      </tr>
-                      <tr>  
-                          <th>Banking Throughput</th>
-                          <td><input type="text" id="ov-BANKING_THROUGHPUT"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-8"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-8"></td>
-                      </tr>
-                      <tr>  
-                          <th>VAT Throughput</th>
-                          <td><input type="text" id="ov-VAT_THROUGHPUT"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-9"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-9"></td>
-                      </tr>
-                      <tr>  
-                          <th>Leverage</th>
-                          <td><input type="text" id="ov-LEVERAGE"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-10"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-10"></td>
-                      </tr>
-                      <tr>  
-                          <th>Borrowing to Turnover Ratio</th>
-                          <td><input type="text" id="ov-BORROWING_TO_TURNOVER_RATIO"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-11"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-11"></td>
-                      </tr>
-                      <tr>  
-                          <th>Working Capital Gap</th>
-                          <td><input type="text" id="ov-WORKING_CAPITAL_GAP"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-12"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-12"></td>
-                      </tr>
-                      <tr>  
-                          <th>Topline Trendt</th>
-                          <td><input type="text" id="ov-TOPLINE_TREND"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-13"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-13"></td>
-                      </tr>
-                      <tr>  
-                          <th>Bottomline Trend</th>
-                          <td><input type="text" id="ov-BOTTOMLINE_TREND"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-14"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-14"></td>
-                      </tr>
-                      <tr>  
-                          <th>OPBDIT Trend</th>
-                          <td><input type="text" id="ov-OPBDIT_TREND"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-15"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-15"></td>
-                      </tr>
-                      <tr>  
-                          <th>TNW Trend</th>
-                          <td><input type="text" id="ov-TNW_TREND"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-16"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-16"></td>
-                      </tr>
-                      <tr>  
-                          <th>Cheque bounce ratio</th>
-                          <td><input type="text" id="ov-CHEQUE_BOUNCE_RATIO"></td>
-                          <td colspan="2"><input type="text" id="ov-DEVIATIONS_DESC-17"></td>
-                          <td><input type="text" id="ov-DEVIATIONS_CODE-17"></td>
-                      </tr>
-                    </table>  
-                    <button class="save-btn" id="ov-btn">Save</button>
-
-                    <!--BANKING AND VAT-->
-                    <h2 class="heading">BANKING & VAT Analysis :</h2>
-                    <table id="banking1" class="banking">
-                        <tr>
-                            <th>CC Facility from:</th>
-                            <td><input readonly type="text" id="bv-BANK_NAME-ACCOUNT_NUM-1"></td>
-                            <td><input readonly type="text" id="bv-BANK_NAME-ACCOUNT_NUM-2"></td>
-                        </tr>
-                        <tr>
-                            <th>CC Facility Amount Rs. (In Lacs)</th>
-                            <td><input readonly type="number" id="bv-AMOUNT-1"></td>
-                            <td><input readonly type="number" id="bv-AMOUNT-2"></td>
-                        </tr>
-                    </table>
-
-                    <table id="banking-ac1" class="banking">
-                            <tr>
-                                <th colspan="3" style="border-right: 0px;">
-                                    <input type="text" style="text-align:right;border:0px;" readonly value="STATE BANK OF INDIA" id="bv-ac-1-BANK_NAME">
-                                </th>
-                                <th colspan="4" style="border-left: 0px;">
-                                    <input type="text" style="text-align:left;border:0px;padding-left: 5px;" readonly value="00000030047032945" id="bv-ac-1-ACCOUNT_NUM">
+                   <!--BANKING AND VAT-->
+                   <h2 class="heading">BANKING & VAT Analysis :</h2>
+                   <table id="banking1" class="banking">
+                       <tr>
+                           <th>CC Facility from:</th>
+                           <td><input readonly type="text" id="bv-BANK_NAME-ACCOUNT_NUM-1"></td>
+                           <td><input readonly type="text" id="bv-BANK_NAME-ACCOUNT_NUM-2"></td>
+                       </tr>
+                       <tr>
+                           <th>CC Facility Amount Rs. (In Lacs)</th>
+                           <td><input readonly type="number" id="bv-AMOUNT-1"></td>
+                           <td><input readonly type="number" id="bv-AMOUNT-2"></td>
+                       </tr>
+                   </table>
+ 
+                   <table id="banking-ac1" class="banking">
+                           <tr>
+                               <th colspan="3" style="border-right: 0px;">
+                                   <input type="text" style="text-align:right;border:0px;" readonly value="STATE BANK OF INDIA" id="bv-ac-1-BANK_NAME">
                                </th>
-                            </tr>
-                            <tr>
-                                <th colspan="1"></th>
-                                <th colspan="6" class="sub-head" style="text-align:center;">Last 6 months</th>
-                            </tr>
-                            <tr>
-                                    <th></th>
-                                    <th><input type="text"  readonly value="Nov-16" id="bv-ac-1-MONTH_NAME-YEAR-1"></th>
-                                    <th><input type="text"  readonly value="Dec-16" id="bv-ac-1-MONTH_NAME-YEAR-2"></th>
-                                    <th><input type="text"  readonly value="Jan-17" id="bv-ac-1-MONTH_NAME-YEAR-3"></th>
-                                    <th><input type="text"  readonly value="Feb-17" id="bv-ac-1-MONTH_NAME-YEAR-4"></th>
-                                    <th><input type="text"  readonly value="Mar-17" id="bv-ac-1-MONTH_NAME-YEAR-5"></th>
-                                    <th><input type="text"  readonly value="Apr-17" id="bv-ac-1-MONTH_NAME-YEAR-6"></th>
-                            </tr>
-                            <tr>
-                                    <th><input type="text"   readonly value="1st"></th>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-1"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-2"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-3"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-4"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-5"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-6"></td>
-                            </tr>
-                            <tr>
-                                    <th><input type="text"   readonly value="7th"></th>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-1"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-2"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-3"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-4"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-5"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-6"></td>
-                            </tr>
-                            <tr>
-                                    <th><input type="text"   readonly value="14th"></th>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-1"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-2"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-3"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-4"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-5"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-6"></td>
-                            </tr>
-                            <tr>
-                                    <th><input type="text"   readonly value="28th"></th>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-1"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-2"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-3"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-4"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-5"></td>
-                                    <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-6"></td>
-                            </tr>
-                            <tr>
-                                    <th colspan="5"><input type="text"  style="text-align:center;" readonly value="AVERAGE Bank Balance" id="bv-ac-1-AVERAGE_BALANCE"></th>
-                                    <td colspan="2"><input type="number" readonly></td>
-                            </tr>
-                            <tr>
-                                    <th colspan="5"><input type="text"  style="text-align:center;" readonly value="MEDIAN Bank Balance" id="bv-ac-1-MEDIAN_BALANCE"></th>
-                                    <td colspan="2"><input type="number" readonly></td>
-                            </tr>
-                        </table>
+                               <th colspan="4" style="border-left: 0px;">
+                                   <input type="text" style="text-align:left;border:0px;padding-left: 5px;" readonly value="00000030047032945" id="bv-ac-1-ACCOUNT_NUM">
+                              </th>
+                           </tr>
+                           <tr>
+                               <th colspan="1"></th>
+                               <th colspan="6" class="sub-head" style="text-align:center;">Last 6 months</th>
+                           </tr>
+                           <tr>
+                                   <th></th>
+                                   <th><input type="text"  readonly value="Nov-16" id="bv-ac-1-MONTH_NAME-YEAR-1"></th>
+                                   <th><input type="text"  readonly value="Dec-16" id="bv-ac-1-MONTH_NAME-YEAR-2"></th>
+                                   <th><input type="text"  readonly value="Jan-17" id="bv-ac-1-MONTH_NAME-YEAR-3"></th>
+                                   <th><input type="text"  readonly value="Feb-17" id="bv-ac-1-MONTH_NAME-YEAR-4"></th>
+                                   <th><input type="text"  readonly value="Mar-17" id="bv-ac-1-MONTH_NAME-YEAR-5"></th>
+                                   <th><input type="text"  readonly value="Apr-17" id="bv-ac-1-MONTH_NAME-YEAR-6"></th>
+                           </tr>
+                           <tr>
+                                   <th><input type="text"   readonly value="1st"></th>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-1"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-2"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-3"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-4"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-5"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_1-6"></td>
+                           </tr>
+                           <tr>
+                                   <th><input type="text"   readonly value="7th"></th>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-1"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-2"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-3"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-4"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-5"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_7-6"></td>
+                           </tr>
+                           <tr>
+                                   <th><input type="text"   readonly value="14th"></th>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-1"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-2"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-3"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-4"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-5"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_14-6"></td>
+                           </tr>
+                           <tr>
+                                   <th><input type="text"   readonly value="28th"></th>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-1"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-2"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-3"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-4"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-5"></td>
+                                   <td><input type="number"  id="bv-ac-1-AMOUNT_AT_DAY_28-6"></td>
+                           </tr>
+                           <tr>
+                                   <th colspan="5"><input type="text"  style="text-align:center;" readonly value="AVERAGE Bank Balance" id="bv-ac-1-AVERAGE_BALANCE"></th>
+                                   <td colspan="2"><input type="number" readonly></td>
+                           </tr>
+                           <tr>
+                                   <th colspan="5"><input type="text"  style="text-align:center;" readonly value="MEDIAN Bank Balance" id="bv-ac-1-MEDIAN_BALANCE"></th>
+                                   <td colspan="2"><input type="number" readonly></td>
+                           </tr>
+                       </table>
 
                         <table id="banking-ac2" class="banking">
                                 <tr>

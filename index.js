@@ -1,7 +1,5 @@
 var CAM_DATA;
 $(document).ready(function () {
-	debugger;
-	//var CAM_DATA ;
 	$('.example1').datepicker({
 		format: "dd/mm/yy",
 		autoclose: true
@@ -28,9 +26,10 @@ $(document).ready(function () {
 
 				updateFinancialAnalysys(fa);
 				fillRTRForm(RTR);
-
+				//overview = {};
+				//pdNote = {};
 				if (Object.keys(overview).length != 0) {
-					fillOverviewData(overview);
+					fillOverviewData(overview,DATA);
 				}
 				if (Object.keys(pdNote).length != 0) {
 					fillPDNote(pdNote, fa);
@@ -39,7 +38,7 @@ $(document).ready(function () {
 					getApplicationData(function (appData) {
 						if (Object.keys(overview).length == 0) {
 							overview = prepareOverviewData(appData);
-							fillOverviewData(overview);
+							fillOverviewData(overview,DATA);
 						}
 						if (Object.keys(pdNote).length == 0) {
 							pdNote = preparePDNoteData(appData);
@@ -56,7 +55,7 @@ $(document).ready(function () {
 	});
 	$('#pl-btn').click(function (e) {
 		e.preventDefault();
-		updateFA();
+		updateFA(CAM_DATA);
 	});
 	$('#pd-btn').click(function (e) {
 		e.preventDefault();
@@ -67,11 +66,55 @@ $(document).ready(function () {
 		var data = getRTRCalculations();
 		var updatedData = updateRTRCalculations(data);
 		updateRTR(updatedData);
-	});
+	 });
 	$('#ov-btn').click(function (e) {
 		e.preventDefault();
 		var data = getOVerviewInfo();
 		updateOverview(data);
+	});
+
+	$("input[type=number][name!=rtr]").bind('keyup change', function () {
+		
+		var rtrData = getRTRCalculations();
+		rtrData = updateRTRCalculations(rtrData);
+		CAM_DATA.RTR = rtrData;
+		
+		var data = getOVerviewInfo();
+		CAM_DATA.OVERVIEW = data;
+		
+		var fa = calculateFinancialAnalysys(CAM_DATA);
+		CAM_DATA.FINANCIAL_ANALYSYS = fa;
+		updateFinancialAnalysys(fa);
+		updateFAFieldsOfPDNote(fa);
+
+		fillOverviewData(CAM_DATA.OVERVIEW,CAM_DATA);
+
+	});
+	$("input[type=number][name=rtr]").bind('keyup change', function () {
+		var rtrData = getRTRCalculations();
+		rtrData = updateRTRCalculations(rtrData);
+		CAM_DATA.RTR = rtrData;
+		fillRTRForm(rtrData);
+
+		var fa = calculateFinancialAnalysys(CAM_DATA);
+		CAM_DATA.FINANCIAL_ANALYSYS = fa;
+		updateFinancialAnalysys(fa);
+		updateFAFieldsOfPDNote(fa);
+
+		fillOverviewData(CAM_DATA.OVERVIEW,CAM_DATA);
+
+	});
+	$("input[type=text][name=rtr]").bind('keyup change', function () {
+		var data = getRTRCalculations();
+		var updatedData = updateRTRCalculations(data);
+		fillRTRForm(updatedData);
+
+		var fa = calculateFinancialAnalysys(CAM_DATA);
+		CAM_DATA.FINANCIAL_ANALYSYS = fa;
+		updateFinancialAnalysys(fa);
+		updateFAFieldsOfPDNote(fa);
+
+		fillOverviewData(CAM_DATA.OVERVIEW,CAM_DATA);
 	});
 	function getApplicationData(callBack) {
 		$.ajax({
@@ -220,9 +263,24 @@ $(document).ready(function () {
 		}
 		return details;
 	}
-	function fillOverviewData(ovData) {
+	function fillOverviewData(ovData,appCamData) {
 		var ovFields = this.ovFields;
 		var obj = {};
+		
+		var financialData=appCamData.FINANCIAL_ANALYSYS;
+		//TODO:pl and bs is pending
+		var dscrTotal = financialData.DSCR_CALCULATION.DSCR_TOTAL;
+		var ratios = financialData.RATIOS;
+
+		ovData.DSCR_TOTAL = dscrTotal;
+		ratios.forEach(function(item){
+			if(item.YEAR == financialData.CURRENT_FIN_YEAR){
+				ovData.LEVERAGE = item.TOL_OR_TNW;
+				ovData.WORKING_CAPITAL_GAP = item.NET_WORKING_CAPITAL;
+			}
+		});
+
+
 		ovFields.forEach(function (item, idx) {
 			var field = item.key;
 			var id = 'ov-' + field;
@@ -386,14 +444,13 @@ $(document).ready(function () {
 		});
 		return dataArr;
 	}
-	function updateFA() {
+	function updateFA(appCamData){
 
 		var errObj = {};
-		var fa = calculateFinancialAnalysys();
-		debugger;
+		var fa = calculateFinancialAnalysys(appCamData);
 		var camData = CAM_DATA || {};
 		var faReqData = camData.FINANCIAL_ANALYSYS;
-		//PROFIT & LOS 
+		// //PROFIT & LOS 
 		var plInput = faReqData.PROFIT_LOSS_ACCOUNT;
 		var plOutput = fa.PROFIT_LOSS_ACCOUNT;
 		var plInputYear = plInput.FINANCIAL_YEAR_ANALYSIS;
@@ -413,7 +470,7 @@ $(document).ready(function () {
 		if (Object.keys(faObj).length > 0) {
 			errObj.FINANCIAL_ANALYSYS = faObj;
 		}
-		//BALANCE SHEET
+		// //BALANCE SHEET
 		var bsInput = faReqData.BALANCE_SHEET;
 		var bsOutput = fa.BALANCE_SHEET;
 		var bsInputYear = bsInput.FINANCIAL_YEAR_ANALYSIS;
@@ -432,22 +489,22 @@ $(document).ready(function () {
 		if (Object.keys(bsObj).length > 0) {
 			errObj.BALANCE_SHEET = bsObj;
 		}
-		//RATIOS
+		// //RATIOS
 		var ratiosInput = faReqData.RATIOS;
 		var ratiosOutput = fa.RATIOS;
 		errors = getUnmatchedCalculations(ratiosInput, ratiosOutput);
 		if (errors.length > 0) {
 			errObj.RATIOS = errors;
 		}
-		//CASH POSITION
+		// //CASH POSITION
 		var cpInput = faReqData.CASH_POSITION;
 		var cpOutput = fa.CASH_POSITION;
-		debugger;
+
 		errors = getUnmatchedCalculations(cpInput, cpOutput);
 		if (errors.length > 0) {
 			errObj.CASH_POSITION = errors;
 		}
-		//DSCR CALCULATION
+		// //DSCR CALCULATION
 		var dscrInput = faReqData.DSCR_CALCULATION || {};
 		var dscrOutput = fa.DSCR_CALCULATION || {};
 		var caInput = dscrInput.CASH_ACCRUALS || {};
@@ -488,13 +545,11 @@ $(document).ready(function () {
 		if (dscr.DSCR_TOTAL || Object.keys(dscr.CASH_ACCRUALS).length > 0 || Object.keys(dscr.OBLIGATIONS).length > 0) {
 			errObj.DSCR_CALCULATION = dscr;
 		}
-		debugger;
 		if (Object.keys(errObj).length > 0) {
-			var message = { "message": "some calculations are incorrect", "Data": errObj };
+			var message = { "message": "some calculations are incorrect", "data": errObj };
 			console.log(JSON.stringify(message));
 			alert(JSON.stringify(message));
-		}else{
-			debugger;
+		 }else{
 			var url = "http://localhost:3004/v2/cam/update/financialAnalysys";
 			var dataObj = {
 				"APPLICATION_ID": document.getElementById('appid').value,
@@ -528,15 +583,61 @@ $(document).ready(function () {
 	}
 	function updateRTR(data) {
 
-		var url = "http://localhost:3004/v2/cam/update/rtr";
-		var dataObj = {
-			"APPLICATION_ID": document.getElementById('appid').value,
-			"LOAN_TYPE": "BL",
-			"DATA": {
-				"RTR": data
-			}
-		};
-		updateCAMCalculation(dataObj, url);
+		// var camData = CAM_DATA || {};
+		// var rtrReqData = camData.RTR;
+		// var rtrInput = rtrReqData;
+		// var rtrOutput = data;
+		// var inputLoanData = rtrInput.LOAN_DATA;
+		// var outputLoanData = rtrOutput.LOAN_DATA;
+		// var loans = [];
+		// var rtrObj = {};
+		// inputLoanData.forEach(function(inputItem){
+		// 	outputLoanData.forEach(function(outputItem){
+		// 		if(inputItem.ACCOUNT_NUMBER == outputItem.ACCOUNT_NUMBER){
+		// 				var obj = {};
+		// 				if(inputItem.VINTAGE != outputItem.VINTAGE){
+		// 					obj.VINTAGE = { INPUT: inputItem.VINTAGE, OUTPUT: outputItem.VINTAGE };
+		// 				}
+		// 				if(inputItem.BALANCE_TENURE != outputItem.BALANCE_TENURE){
+		// 					obj.BALANCE_TENURE = { INPUT: inputItem.BALANCE_TENURE, OUTPUT: outputItem.BALANCE_TENURE };
+		// 				}
+		// 				if(inputItem.IS_EMI_OBLIGATED != outputItem.IS_EMI_OBLIGATED){
+		// 					obj.IS_EMI_OBLIGATED = { INPUT: inputItem.IS_EMI_OBLIGATED, OUTPUT: outputItem.IS_EMI_OBLIGATED };
+		// 				}
+		// 				if(Object.keys(obj).length > 0){
+		// 					obj.ACCOUNT_NUMBER = inputItem.ACCOUNT_NUMBER;
+		// 					loans.push(obj);
+		// 				}
+		// 		}
+		// 	});
+		// });
+		// if(loans.length > 0){
+		// 	rtrObj.LOAN_DATA = loans;
+		// }
+		// if(rtrInput.TOTAL_INITIAL_LOAN_AMOUNT != rtrOutput.TOTAL_INITIAL_LOAN_AMOUNT){
+		// 	rtrObj.TOTAL_INITIAL_LOAN_AMOUNT = { INPUT: rtrInput.TOTAL_INITIAL_LOAN_AMOUNT, OUTPUT: rtrOutput.TOTAL_INITIAL_LOAN_AMOUNT }; 
+		// }
+		// if(rtrInput.TOTAL_CURRENT_OUTSTANDING != rtrOutput.TOTAL_CURRENT_OUTSTANDING){
+		// 	rtrObj.TOTAL_CURRENT_OUTSTANDING = { INPUT: rtrInput.TOTAL_CURRENT_OUTSTANDING, OUTPUT: rtrOutput.TOTAL_CURRENT_OUTSTANDING }; 
+		// }
+		// if(rtrInput.TOTAL_EMI != rtrOutput.TOTAL_EMI){
+		// 	rtrObj.TOTAL_EMI = { INPUT: rtrInput.TOTAL_EMI, OUTPUT: rtrOutput.TOTAL_EMI }; 
+		// }
+		// if(Object.keys(rtrObj).length > 0){
+		// 	var message = { "message": "some calculations are incorrect", "data": rtrObj };
+		// 	console.log(JSON.stringify(message));
+		// 	alert(JSON.stringify(message));
+		// }else{
+			var url = "http://localhost:3004/v2/cam/update/rtr";
+			var dataObj = {
+				"APPLICATION_ID": document.getElementById('appid').value,
+				"LOAN_TYPE": "BL",
+				"DATA": {
+					"RTR": data
+				}
+			};
+			updateCAMCalculation(dataObj, url);
+		//}
 	}
 	function updateOverview(data) {
 
@@ -638,25 +739,31 @@ $(document).ready(function () {
 				});
 				obj[field] = deviations;
 
-				//Delete BANKING AND FA fields
-				delete obj.DSCR;
-				delete obj.ABB;
-				delete obj.BANKING_THROUGHPUT;
-				delete obj.VAT_THROUGHPUT;
-				delete obj.LEVERAGE;
-				delete obj.BORROWING_TO_TURNOVER_RATIO;
-				delete obj.WORKING_CAPITAL_GAP;
-				delete obj.TOPLINE_TREND;
-				delete obj.BOTTOMLINE_TREND;
-				delete obj.OPBDIT_TREND;
-				delete obj.TNW_TREND;
-				delete obj.CHEQUE_BOUNCE_RATIO;
-
 			}
+
 		});
+
+		obj.MONTHLY_EMI = PMT((Number(obj.RATE_OF_INTEREST)/1200),Number(obj.TENURE),-Number(obj.PROPOSED_LOAN_AMOUNT));
+		
+		//Delete BANKING AND FA fields
+		delete obj.DSCR;
+		delete obj.ABB;
+		delete obj.BANKING_THROUGHPUT;
+		delete obj.VAT_THROUGHPUT;
+		delete obj.LEVERAGE;
+		delete obj.BORROWING_TO_TURNOVER_RATIO;
+		delete obj.WORKING_CAPITAL_GAP;
+		delete obj.TOPLINE_TREND;
+		delete obj.BOTTOMLINE_TREND;
+		delete obj.OPBDIT_TREND;
+		delete obj.TNW_TREND;
+		delete obj.CHEQUE_BOUNCE_RATIO;
 
 		return obj;
 
+	}
+	function PMT(i, n, p) {
+		return i * p * Math.pow((1 + i), n) / (1 - Math.pow((1 + i), n));
 	}
 	function getRTRCalculations() {
 		var loansLength = 5;
@@ -748,21 +855,6 @@ $(document).ready(function () {
 		});
 	}
 
-	$("input[type=number][name!=rtr]").bind('keyup change', function () {
-		var fa = calculateFinancialAnalysys();
-		updateFinancialAnalysys(fa);
-		updateFAFieldsOfPDNote(fa);
-	});
-	$("input[type=number][name=rtr]").bind('keyup change', function () {
-		var data = getRTRCalculations();
-		var updatedData = updateRTRCalculations(data);
-		fillRTRForm(updatedData);
-	});
-	$("input[type=text][name=rtr]").bind('keyup change', function () {
-		var data = getRTRCalculations();
-		var updatedData = updateRTRCalculations(data);
-		fillRTRForm(updatedData);
-	});
 	function updateRTRCalculations(data) {
 		var totalOutStanding = 0;
 		var totalInitalLoanAmout = 0;
@@ -808,7 +900,7 @@ $(document).ready(function () {
 		if (!rtrData) {
 			return;
 		}
-		var loanData = rtrData.LOAN_DATA;
+		var loanData = rtrData.LOAN_DATA || [];
 		var loansLength = 5;
 		var repaymentlength = 3;
 		var rtrFields = this.rtrFields;
@@ -851,7 +943,7 @@ $(document).ready(function () {
 			});
 		}
 	}
-	function calculateFinancialAnalysys() {
+	function calculateFinancialAnalysys(appCamData) {
 		var yearsLength = 3;
 		var startYear = 2014;
 		var endYear = 2016;
@@ -897,7 +989,7 @@ $(document).ready(function () {
 		}
 		BALANCE_SHEET['FINANCIAL_YEAR_ANALYSIS'] = bsArr;
 		faData['BALANCE_SHEET'] = BALANCE_SHEET;
-		var fa = getFinancialAnalysys(faData);
+		var fa = getFinancialAnalysys(faData,appCamData);
 		return fa;
 	}
 	function fillPDNote(pdData, fa) {
@@ -1040,22 +1132,42 @@ $(document).ready(function () {
 				ele.value = cpData[0][key];
 			}
 		}
-		var dscrCal = fa.DSCR_CALCULATION;
-		var accurals = dscrCal.CASH_ACCRUALS;
-		var obligations = dscrCal.OBLIGATIONS;
-		var computation = accurals.COMPUTATION;
-		var yearly = accurals.YEARLY;
+		var dscrCal = fa.DSCR_CALCULATION || {};
+		var accurals = dscrCal.CASH_ACCRUALS || {};
+		var obligations = dscrCal.OBLIGATIONS || {};
+		var computation = accurals.COMPUTATION || {};
+		var yearly = accurals.YEARLY || {};
+
+		var obComputation = obligations.COMPUTATION || {};
+		var obYearly = obligations.YEARLY || {};
+
 		var dscrLength = 11;
 		for (var j = 1; j <= dscrLength; j++) {
-			var id = 'dscr' + '-c-' + j;  //pl-2014-2015-1
+			var id = 'dscr' + '-ca-c-' + j;  
 			var ele = document.getElementById(id);
-			var key = ele.getAttribute('key');
-			ele.value = computation[key];
-
-			var id1 = 'dscr' + '-y-' + j;  //pl-2014-2015-1
+			if(ele){
+				var key = ele.getAttribute('key');
+				ele.value = computation[key];
+			}
+			var id1 = 'dscr' + '-ca-y-' + j;  
 			var ele = document.getElementById(id1);
-			var key1 = ele.getAttribute('key');
-			ele.value = yearly[key1];
+			if(ele){
+				var key1 = ele.getAttribute('key');
+				ele.value = yearly[key1];
+			}
+
+			var id = 'dscr' + '-ob-c-' + j;  
+			var ele = document.getElementById(id);
+			if(ele){
+				var key = ele.getAttribute('key');
+				ele.value = obComputation[key];
+			}
+			var id1 = 'dscr' + '-ob-y-' + j;  
+			var ele = document.getElementById(id1);
+			if(ele){
+				var key1 = ele.getAttribute('key');
+				ele.value = obYearly[key1];
+			}
 		}
 		document.getElementById('DSCR_TOTAL').value = dscrCal.DSCR_TOTAL;
 
@@ -1239,7 +1351,7 @@ $(document).ready(function () {
 			var positionYear = {};
 			positionYear.YEAR = item.YEAR;
 			positionYear.NET_PROFIT_AFTER_TAX = item.PAT;
-			positionYear.ADD = item.ADD;//TODO:check with Ranjit
+			positionYear.ADD = item.ADD || 0;//TODO:check with Ranjit
 			positionYear.DEPRECIATION = item.DEPRECIATION_AND_AMORTISATION;
 			positionYear.SALARY_PAID_TO_PROMOTER_OR_PARTNERS = item.SALARY_TO_PARTNER_OR_DIRECTOR;
 			positionYear.INTEREST_PAID_TO_PROMOTERS = item.INTEREST_EXPENSES_PAID_TO_PARTNERS_OR_DIRECTOR;
@@ -1320,7 +1432,36 @@ $(document).ready(function () {
 			CASH_ACCRUALS.YEARLY = yearly;
 			CASH_ACCRUALS.COMPUTATION = computation;
 			DSCR_CALCULATION.CASH_ACCRUALS = CASH_ACCRUALS;
+
+
+			//check with Karthikeya whether we need to save them or not
+			var rtr = appCamData.RTR;
+			var overview = appCamData.OVERVIEW;
+			//var finAnlData = appCamData.FINANCIAL_ANALYSYS;
+			//var dscrData = faData.DSCR_CALCULATION;
+			//var obligations = dscrData.OBLIGATIONS || {};
+
+			OBLIGATIONS.COMPUTATION = {};
+			OBLIGATIONS.COMPUTATION.ALL_RETAIL_OBLIGATIONS = Number(rtr.TOTAL_EMI);
+			OBLIGATIONS.COMPUTATION.INTEREST_ON_CC_FACILITY = 0;//TODO:will come from Banking and VAT
+			OBLIGATIONS.COMPUTATION.PROPOSED_INCRED_EMI = Number(overview.MONTHLY_EMI);	
+			//OBLIGATIONS.COMPUTATION.INTEREST_PAID_ON_ALL_LOANS = obligations.COMPUTATION.INTEREST_PAID_ON_ALL_LOANS;
+
+			OBLIGATIONS.YEARLY = {};
+			OBLIGATIONS.YEARLY.ALL_RETAIL_OBLIGATIONS = (rtr.TOTAL_EMI*12);
+			OBLIGATIONS.YEARLY.INTEREST_ON_CC_FACILITY = 0;//TODO:will come from Banking and VAT
+			OBLIGATIONS.YEARLY.PROPOSED_INCRED_EMI = (overview.MONTHLY_EMI*12);
+			//OBLIGATIONS.YEARLY.INTEREST_PAID_ON_ALL_LOANS = (obligations.YEARLY.INTEREST_PAID_ON_ALL_LOANS*12);
+			// OBLIGATIONS.YEARLY.TOTAL = OBLIGATIONS.YEARLY.ALL_RETAIL_OBLIGATIONS+OBLIGATIONS.COMPUTATION.INTEREST_ON_CC_FACILITY
+			// 					+OBLIGATIONS.YEARLY.PROPOSED_INCRED_EMI
+			// 					+OBLIGATIONS.YEARLY.INTEREST_PAID_ON_ALL_LOANS;
+
+			OBLIGATIONS.YEARLY.TOTAL = OBLIGATIONS.YEARLY.ALL_RETAIL_OBLIGATIONS+OBLIGATIONS.COMPUTATION.INTEREST_ON_CC_FACILITY
+								+OBLIGATIONS.YEARLY.PROPOSED_INCRED_EMI;
+								
+
 			DSCR_CALCULATION.OBLIGATIONS = OBLIGATIONS;
+			DSCR_CALCULATION.DSCR_TOTAL = CASH_ACCRUALS.YEARLY.TOTAL/OBLIGATIONS.YEARLY.TOTAL;
 
 		}
 		FINANCIAL_ANALYSYS.DSCR_CALCULATION = DSCR_CALCULATION;

@@ -142,7 +142,7 @@ var ovFields = [
     { "key": "RATE_OF_INTEREST" },
     { "key": "TENURE" },
     { "key": "MONTHLY_EMI" },
-    { "key": "DSCR" },
+    { "key": "DSCR_TOTAL" },
     { "key": "ABB" },
     { "key": "BANKING_THROUGHPUT" },
     { "key": "VAT_THROUGHPUT" },
