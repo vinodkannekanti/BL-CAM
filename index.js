@@ -4,6 +4,25 @@ $(document).ready(function () {
 		format: "dd/mm/yy",
 		autoclose: true
 	});
+
+	var params = new URL(window.location).searchParams;
+
+	var host = params.get('host');
+	var appId = params.get('appId');
+	var env;
+	if(host == 'dev'){
+		env = 'https://dev-api.incred.com';
+	}
+	else if(host == 'uat'){
+		env = 'https://uat-api.incred.com';
+	}else if(host == 'prod'){
+		env = 'https://api.incred.com';
+	}else{
+		env = 'http://localhost:3004';
+	}
+	document.getElementById('host').value = env;
+	document.getElementById('appid').value = appId;
+
 	$.ajax({
 		crossDomain: true,
 		type: "GET",
@@ -14,7 +33,7 @@ $(document).ready(function () {
 			request.setRequestHeader("api-key", "f72f0ffdad341711a9f978f5e9db448fc84733fbcb271ff7302a360debb942");
 		},
 		//url: "http://localhost:3004/v2/cam/get/3285469037151094A",
-		url: "http://localhost:3004/v2/cam/get/" + document.getElementById('appid').value,
+		url: document.getElementById('host').value+"/v2/cam/get/"+ document.getElementById('appid').value,
 		success: function (msg) {
 			if (msg && msg.response) {
 				CAM_DATA = msg.response.DATA;
@@ -53,24 +72,86 @@ $(document).ready(function () {
 			$('.ajax-loader').css("visibility", "hidden");
 		}
 	});
-	$('#pl-btn').click(function (e) {
-		e.preventDefault();
-		updateFA(CAM_DATA);
-	});
-	$('#pd-btn').click(function (e) {
-		e.preventDefault();
-		updatePDNote();
-	});
 	$('#rtr-btn').click(function (e) {
 		e.preventDefault();
 		var data = getRTRCalculations();
 		var updatedData = updateRTRCalculations(data);
+		//updatedData =  verifyRTR(updatedData);
 		updateRTR(updatedData);
 	 });
-	$('#ov-btn').click(function (e) {
+
+	 $('#ov-btn').click(function (e) {
 		e.preventDefault();
 		var data = getOVerviewInfo();
+		//data = verifyOverview(data);
 		updateOverview(data);
+	});
+
+	$('#pl-btn').click(function (e) {
+		e.preventDefault();
+		var fa = getFA(CAM_DATA);
+		//fa = verifyFA(fa);
+		updateFA(fa);
+
+	});
+
+	$('#pd-btn').click(function (e) {
+		e.preventDefault();
+		var pdNote = getPDNote();
+		updatePDNote(pdNote);
+	});
+	
+	$('#save-cam-btn').click(function(e){
+		e.preventDefault();
+		var errorMsg = {};
+		var data = {};
+		var banking = {};
+		var rtr = getRTRCalculations();
+		rtr = updateRTRCalculations(rtr);
+		// verifyRTR(rtr,function(err,isValid){
+		// 	if(isValid){
+		// 		data.RTR = rtr;
+		// 	}else{
+		// 		errorMsg.RTR = err;
+		// 	}
+		// });
+		// var ov = getOVerviewInfo();
+		// verifyOverview(ov,function(err,isValid){
+		// 	if(isValid){
+		// 		data.OVERVIEW = ov;
+		// 	}else{
+		// 		errorMsg.OVERVIEW = err;
+		// 	}
+		// });
+		// var fa = getFA(CAM_DATA);
+		// verifyFA(fa,function(err,isValid){
+		// 	if(isValid){
+		// 		data.FINANCIAL_ANALYSYS = fa;
+		// 	}else{
+		// 		errorMsg.FINANCIAL_ANALYSYS = err;
+		// 	}
+		// });
+
+		data.RTR = rtr;
+		data.OVERVIEW = ov;
+		data.FINANCIAL_ANALYSYS = fa;
+		var pdNote = getPDNote();
+		data.PD_NOTE = pdNote;
+		
+		if(Object.keys(errorMsg).length > 0){
+			var message = { message: 'Some calculations are incorrect', data: { DATA: errorMsg }};
+			alert(JSON.stringify(message));
+		}else{
+			// var message ={message: 'All calculations are correct'};
+			// alert(JSON.stringify(message));
+			var url = "/v2/cam/update";
+			var dataObj = {
+				"APPLICATION_ID": document.getElementById('appid').value,
+				"LOAN_TYPE": "BL",
+				"DATA": data
+			};
+			updateCAMCalculation(dataObj, url);
+		}
 	});
 
 	$("input[type=number][name!=rtr]").bind('keyup change', function () {
@@ -206,9 +287,9 @@ $(document).ready(function () {
 				}
 				if (customer.CUSTOMER_TYPE == "COMPANY") {
 					bdDatails.NAME = customer.COMPANY_NAME;
-					//bdDatails.RELATIONSHIP = 'Self';
 				} else {
 					bdDatails.NAME = customer.FNAME + ' ' + customer.LNAME;
+				}
 					bdDatails.PERCENTAGE_STAKE_HOLDING = customer.SHARE_HOLDING;
 					bdDatails.RELATION_WITH = customer.RELATION_WITH;
 					bdDatails.RELATIONSHIP = customer.RELATIONSHIP;
@@ -218,7 +299,7 @@ $(document).ready(function () {
 					bdDatails.WORK_INDUSTRY_EXPERIENCE = customer.WORK_INDUSTRY_EXPERIENCE;
 					bdDatails.CIBIL_SCORE = customer.CIBIL_SCORE; //TODO:check with ranjit and karthikeya
 					bdDatails.LINKEDIN = customer.LINKEDIN; //TODO:check with ranjit and karthikeya
-				}
+
 				promotor.push(bdDatails);
 			});
 
@@ -444,10 +525,8 @@ $(document).ready(function () {
 		});
 		return dataArr;
 	}
-	function updateFA(appCamData){
-
+	function verifyFA(fa,callBack){
 		var errObj = {};
-		var fa = calculateFinancialAnalysys(appCamData);
 		var camData = CAM_DATA || {};
 		var faReqData = camData.FINANCIAL_ANALYSYS;
 		// //PROFIT & LOS 
@@ -545,23 +624,31 @@ $(document).ready(function () {
 		if (dscr.DSCR_TOTAL || Object.keys(dscr.CASH_ACCRUALS).length > 0 || Object.keys(dscr.OBLIGATIONS).length > 0) {
 			errObj.DSCR_CALCULATION = dscr;
 		}
-		if (Object.keys(errObj).length > 0) {
-			var message = { "message": "some calculations are incorrect", "data": errObj };
-			console.log(JSON.stringify(message));
-			alert(JSON.stringify(message));
-		 }else{
-			var url = "http://localhost:3004/v2/cam/update/financialAnalysys";
-			var dataObj = {
-				"APPLICATION_ID": document.getElementById('appid').value,
-				"LOAN_TYPE": "BL",
-				"DATA": {
-					"FINANCIAL_ANALYSYS": fa
-				}
-			};
-			updateCAMCalculation(dataObj, url);
+		if(Object.keys(errObj).length > 0){
+			if(callBack){
+				callBack(errObj,false);
+			}else{
+				var message = { "message": "some calculations are incorrect", "data": errObj };
+				console.log(JSON.stringify(message));
+				alert(JSON.stringify(message));
+			}
+		}else{
+			if(callBack){
+				callBack(null,true);
+			}else{
+				return fa;
+			}
 		}
+
+
 	}
-	function updatePDNote() {
+	function getFA(appCamData){
+
+		var errObj = {};
+		var fa = calculateFinancialAnalysys(appCamData);
+		return fa;
+	}
+	function getPDNote(){
 		var pdNote = {};
 		var pdFields = this.pdFields;
 		for (var i = 0; i < pdFields.length; i++) {
@@ -571,7 +658,133 @@ $(document).ready(function () {
 				pdNote[pdFields[i]] = ele.value;
 			}
 		}
-		var url = "http://localhost:3004/v2/cam/update/pdNote";
+		return pdNote;
+	}
+	function verifyRTR(data,callBack){
+
+		var camData = CAM_DATA || {};
+		var rtrReqData = camData.RTR;
+		var rtrInput = rtrReqData;
+		var rtrOutput = data;
+		var inputLoanData = rtrInput.LOAN_DATA;
+		var outputLoanData = rtrOutput.LOAN_DATA;
+		var loans = [];
+		var rtrObj = {};
+		inputLoanData.forEach(function(inputItem){
+			outputLoanData.forEach(function(outputItem){
+				if(inputItem.ACCOUNT_NUMBER == outputItem.ACCOUNT_NUMBER){
+						var obj = {};
+						if(inputItem.VINTAGE != outputItem.VINTAGE){
+							obj.VINTAGE = { INPUT: inputItem.VINTAGE, OUTPUT: outputItem.VINTAGE };
+						}
+						if(inputItem.BALANCE_TENURE != outputItem.BALANCE_TENURE){
+							obj.BALANCE_TENURE = { INPUT: inputItem.BALANCE_TENURE, OUTPUT: outputItem.BALANCE_TENURE };
+						}
+						if(inputItem.IS_EMI_OBLIGATED != outputItem.IS_EMI_OBLIGATED){
+							obj.IS_EMI_OBLIGATED = { INPUT: inputItem.IS_EMI_OBLIGATED, OUTPUT: outputItem.IS_EMI_OBLIGATED };
+						}
+						if(Object.keys(obj).length > 0){
+							obj.ACCOUNT_NUMBER = inputItem.ACCOUNT_NUMBER;
+							loans.push(obj);
+						}
+				}
+			});
+		});
+		if(loans.length > 0){
+			rtrObj.LOAN_DATA = loans;
+		}
+		if(rtrInput.TOTAL_INITIAL_LOAN_AMOUNT != rtrOutput.TOTAL_INITIAL_LOAN_AMOUNT){
+			rtrObj.TOTAL_INITIAL_LOAN_AMOUNT = { INPUT: rtrInput.TOTAL_INITIAL_LOAN_AMOUNT, OUTPUT: rtrOutput.TOTAL_INITIAL_LOAN_AMOUNT }; 
+		}
+		if(rtrInput.TOTAL_CURRENT_OUTSTANDING != rtrOutput.TOTAL_CURRENT_OUTSTANDING){
+			rtrObj.TOTAL_CURRENT_OUTSTANDING = { INPUT: rtrInput.TOTAL_CURRENT_OUTSTANDING, OUTPUT: rtrOutput.TOTAL_CURRENT_OUTSTANDING }; 
+		}
+		if(rtrInput.TOTAL_EMI != rtrOutput.TOTAL_EMI){
+			rtrObj.TOTAL_EMI = { INPUT: rtrInput.TOTAL_EMI, OUTPUT: rtrOutput.TOTAL_EMI }; 
+		}
+		if(Object.keys(rtrObj).length > 0){
+
+			if(callBack){
+				callBack(rtrObj,false);
+			}else{
+				var message = { "message": "some calculations are incorrect", "data": rtrObj };
+				console.log(JSON.stringify(message));
+				alert(JSON.stringify(message));
+			}
+			
+		}else{
+			if(callBack){
+				callBack(null,true);
+			}else{
+				return data;
+			}
+			
+		}
+		
+	}
+	function verifyOverview(data,callBack){
+		var ovObj = {};
+		var camData = CAM_DATA || {};
+		var ovReqData = camData.OVERVIEW;
+		
+		if(ovReqData.MONTHLY_EMI != data.MONTHLY_EMI){
+			ovObj.MONTHLY_EMI = {INPUT: ovReqData.MONTHLY_EMI, OUTPUT: data.MONTHLY_EMI };
+		}
+		if(Object.keys(ovObj).length > 0){
+			if(callBack){
+				callBack(ovObj,false);
+			}else{
+				var message = { "message": "some calculations are incorrect", "data": ovObj };
+				console.log(JSON.stringify(message));
+				alert(JSON.stringify(message));
+			}
+		}else{
+			if(callBack){
+				callBack(null,true);
+			}else{
+				return data;
+			}
+		}
+	}
+
+function updateRTR(data) {
+
+		var url = "/v2/cam/update/rtr";
+		var dataObj = {
+			"APPLICATION_ID": document.getElementById('appid').value,
+			"LOAN_TYPE": "BL",
+			"DATA": {
+				"RTR": data
+			}
+		};
+		updateCAMCalculation(dataObj, url);
+}
+function updateOverview(data) {
+
+		var url = "/v2/cam/update/overview";
+			var dataObj = {
+				"APPLICATION_ID": document.getElementById('appid').value,
+				"LOAN_TYPE": "BL",
+				"DATA": {
+					"OVERVIEW": data
+				}
+			};
+			updateCAMCalculation(dataObj, url);
+	}
+	function updateFA(fa){
+		var url = "/v2/cam/update/financialAnalysys";
+			var dataObj = {
+				"APPLICATION_ID": document.getElementById('appid').value,
+				"LOAN_TYPE": "BL",
+				"DATA": {
+					"FINANCIAL_ANALYSYS": fa
+				}
+			};
+			updateCAMCalculation(dataObj, url);
+	}
+	function updatePDNote(pdNote) {
+		
+		var url = "/v2/cam/update/pdNote";
 		var dataObj = {
 			"APPLICATION_ID": document.getElementById('appid').value,
 			"LOAN_TYPE": "BL",
@@ -581,78 +794,7 @@ $(document).ready(function () {
 		};
 		updateCAMCalculation(dataObj, url);
 	}
-	function updateRTR(data) {
-
-		// var camData = CAM_DATA || {};
-		// var rtrReqData = camData.RTR;
-		// var rtrInput = rtrReqData;
-		// var rtrOutput = data;
-		// var inputLoanData = rtrInput.LOAN_DATA;
-		// var outputLoanData = rtrOutput.LOAN_DATA;
-		// var loans = [];
-		// var rtrObj = {};
-		// inputLoanData.forEach(function(inputItem){
-		// 	outputLoanData.forEach(function(outputItem){
-		// 		if(inputItem.ACCOUNT_NUMBER == outputItem.ACCOUNT_NUMBER){
-		// 				var obj = {};
-		// 				if(inputItem.VINTAGE != outputItem.VINTAGE){
-		// 					obj.VINTAGE = { INPUT: inputItem.VINTAGE, OUTPUT: outputItem.VINTAGE };
-		// 				}
-		// 				if(inputItem.BALANCE_TENURE != outputItem.BALANCE_TENURE){
-		// 					obj.BALANCE_TENURE = { INPUT: inputItem.BALANCE_TENURE, OUTPUT: outputItem.BALANCE_TENURE };
-		// 				}
-		// 				if(inputItem.IS_EMI_OBLIGATED != outputItem.IS_EMI_OBLIGATED){
-		// 					obj.IS_EMI_OBLIGATED = { INPUT: inputItem.IS_EMI_OBLIGATED, OUTPUT: outputItem.IS_EMI_OBLIGATED };
-		// 				}
-		// 				if(Object.keys(obj).length > 0){
-		// 					obj.ACCOUNT_NUMBER = inputItem.ACCOUNT_NUMBER;
-		// 					loans.push(obj);
-		// 				}
-		// 		}
-		// 	});
-		// });
-		// if(loans.length > 0){
-		// 	rtrObj.LOAN_DATA = loans;
-		// }
-		// if(rtrInput.TOTAL_INITIAL_LOAN_AMOUNT != rtrOutput.TOTAL_INITIAL_LOAN_AMOUNT){
-		// 	rtrObj.TOTAL_INITIAL_LOAN_AMOUNT = { INPUT: rtrInput.TOTAL_INITIAL_LOAN_AMOUNT, OUTPUT: rtrOutput.TOTAL_INITIAL_LOAN_AMOUNT }; 
-		// }
-		// if(rtrInput.TOTAL_CURRENT_OUTSTANDING != rtrOutput.TOTAL_CURRENT_OUTSTANDING){
-		// 	rtrObj.TOTAL_CURRENT_OUTSTANDING = { INPUT: rtrInput.TOTAL_CURRENT_OUTSTANDING, OUTPUT: rtrOutput.TOTAL_CURRENT_OUTSTANDING }; 
-		// }
-		// if(rtrInput.TOTAL_EMI != rtrOutput.TOTAL_EMI){
-		// 	rtrObj.TOTAL_EMI = { INPUT: rtrInput.TOTAL_EMI, OUTPUT: rtrOutput.TOTAL_EMI }; 
-		// }
-		// if(Object.keys(rtrObj).length > 0){
-		// 	var message = { "message": "some calculations are incorrect", "data": rtrObj };
-		// 	console.log(JSON.stringify(message));
-		// 	alert(JSON.stringify(message));
-		// }else{
-			var url = "http://localhost:3004/v2/cam/update/rtr";
-			var dataObj = {
-				"APPLICATION_ID": document.getElementById('appid').value,
-				"LOAN_TYPE": "BL",
-				"DATA": {
-					"RTR": data
-				}
-			};
-			updateCAMCalculation(dataObj, url);
-		//}
-	}
-	function updateOverview(data) {
-
-		var url = "http://localhost:3004/v2/cam/update/overview";
-		var dataObj = {
-			"APPLICATION_ID": document.getElementById('appid').value,
-			"LOAN_TYPE": "BL",
-			"DATA": {
-				"OVERVIEW": data
-			}
-		};
-		updateCAMCalculation(dataObj, url);
-	}
 	function getOVerviewInfo() {
-
 
 		var ovFields = this.ovFields;
 		var obj = {};
@@ -842,7 +984,7 @@ $(document).ready(function () {
 				request.setRequestHeader("api-key", "f72f0ffdad341711a9f978f5e9db448fc84733fbcb271ff7302a360debb942");
 			},
 			data: JSON.stringify(dataObj),
-			url: url,
+			url: document.getElementById('host').value+url,
 			success: function (msg) {
 
 				if (msg) {

@@ -26,12 +26,20 @@
     <div class="ajax-loader">
         <img src="loader.gif" class="img-responsive" />
     </div>
-        <div style="margin: 20px;">
-            <span style="float:left;font-weight:bold;">Application ID:</span>
+    <div>
+        <div style="margin: 20px;float:left;">
+            <span style="float:left;font-weight:bold;">Host :</span>
             <span style="float:left;margin-left:5px;width: 250px;">
-                <input type="text" id="appid" value="5358484999151032A">
+                <input type="text" readyonly id="host">
             </span>
         </div>
+        <div style="margin: 20px;margin-left:5px;float:left;">
+            <span style="float:left;font-weight:bold;">Application ID:</span>
+            <span style="float:left;margin-left:5px;width: 250px;">
+                <input type="text" readyonly id="appid">
+            </span>
+        </div>
+    </div>
         <div style="clear:both;"></div>
         <div>
           <div class="left-cls">
@@ -1715,8 +1723,11 @@
                                 </tr>
                             </table>
                     <button class="save-btn" id="bv-btn">Save</button>
+
+                    
         
           </div>
+          <button class="save-btn" id="save-cam-btn">Save CAM</button>
           </div class="clear"></div>
         </div>
 </body>
