@@ -344,6 +344,10 @@ $(document).ready(function () {
 
 		var financialData = appCamData.FINANCIAL_ANALYSYS;
 		//TODO:pl and bs is pending
+		var plData = financialData.PROFIT_LOSS_ACCOUNT || {};
+		var plYoy = plData.FINANCIAL_YEAR_ANALYSIS_YOY || [];
+		var bsData = financialData.BALANCE_SHEET || {};
+		var bsYoy  = bsData.FINANCIAL_YEAR_ANALYSIS_YOY || [];
 		var dscrTotal = financialData.DSCR_CALCULATION.DSCR_TOTAL;
 		var ratios = financialData.RATIOS;
 
@@ -355,6 +359,19 @@ $(document).ready(function () {
 			}
 		});
 
+		plYoy.forEach(function(item){
+			if(item.TO_YEAR == financialData.CURRENT_FIN_YEAR ){
+				ovData.TOPLINE_TREND = item.NET_SALES;
+				ovData.BOTTOMLINE_TREND = item.PAT;
+				ovData.OPBDIT_TREND = item.OPBDIT;
+
+			}
+		});
+		bsYoy.forEach(function(item){
+			if(item.TO_YEAR == financialData.CURRENT_FIN_YEAR ){
+				ovData.TNW_TREND = item.NET_WORTH;
+			}
+		});
 
 		ovFields.forEach(function (item, idx) {
 			var field = item.key;
